@@ -49,7 +49,6 @@
 
   &__category {
     font-size: 20px;
-    padding-left: 80px;
   }
   &__categories li {
     margin: 8px 0 10px 58px;
@@ -65,10 +64,10 @@
 
   &__organization h4 {
     font-size: 20px;
-    padding: 10px 0 0 80px;
+    padding: 10px 0 0 0;
   }
   &__org li {
-    margin: 5px 0 5px 120px;
+    margin: 5px 0 5px 58px;
     font-size: 16px;
     font-weight: 500;
     list-style: disc;

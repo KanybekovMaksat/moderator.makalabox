@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Context } from "../../../main";
 import { animateScroll as scroll } from "react-scroll";
 import dayjs from "dayjs";
@@ -13,12 +13,14 @@ import "./Published.scss";
 import Filter from "../Filter/Filter";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
 export default function RecipeReviewCard({ searchQuery }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState([]);
   const { store } = useContext(Context);
   const navigate = useNavigate();
 
@@ -52,13 +54,12 @@ export default function RecipeReviewCard({ searchQuery }) {
       const lowercasedQuery = searchQuery.toLowerCase();
       filtered = filtered.filter((post) => {
         const titleMatch = post.title.toLowerCase().includes(lowercasedQuery);
-        const authorMatch = post.author.fullName
-          .toLowerCase()
-          .includes(lowercasedQuery);
+        const authorMatch = post.author.fullName.toLowerCase().includes(lowercasedQuery);
+        const orgMatch = post.organization.name.toLowerCase().includes(lowercasedQuery);
         const categoryMatch = post.categories.some((category) =>
           category.toLowerCase().includes(lowercasedQuery)
         );
-        return titleMatch || authorMatch || categoryMatch;
+        return titleMatch || authorMatch || categoryMatch || orgMatch ;
       });
     }
 
@@ -68,13 +69,22 @@ export default function RecipeReviewCard({ searchQuery }) {
           selectedCategories.includes(category)
         )
       );
+    } 
+
+    if (selectedOrganization.length > 0) {
+      filtered = filtered.filter((post) =>
+        post.organization.some((org) =>
+          selectedOrganization.includes(org)
+        )
+      );
     }
 
     setFilteredPosts(filtered);
-  }, [searchQuery, posts, selectedCategories]);
+  }, [searchQuery, posts, selectedCategories, selectedOrganization]);
 
   const handleFilterChange = (selectedCategories) => {
     setSelectedCategories(selectedCategories);
+    setSelectedOrganization()
   };
 
   return (
@@ -83,11 +93,9 @@ export default function RecipeReviewCard({ searchQuery }) {
         {!searchQuery && (
           <div className="Filter__content">
             <h2>Статьи для проверки</h2>
-            <Filter onCategoryChange={handleFilterChange} />{" "}
-            {/* Добавляем DrawerFilters */}
+            <Filter onCategoryChange={handleFilterChange} />
           </div>
         )}
-
 
         <div className="flex__card">
           {isLoading
@@ -121,6 +129,17 @@ export default function RecipeReviewCard({ searchQuery }) {
                             <Skeleton width={90} height={20} />
                           </li>
                         ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="Card__organization">
+                    <h4>Организация</h4>
+                    <div className="Card__org">
+                      <ul>
+                        <li>
+                          {" "}
+                          <Skeleton width={90} height={20} />
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -170,6 +189,14 @@ export default function RecipeReviewCard({ searchQuery }) {
                             <li key={`empty-${index}`}>пусто</li>
                           )
                         )}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="Card__organization">
+                    <h4>Организация</h4>
+                    <div className="Card__org">
+                      <ul>
+                        <li> {post.organization.name}</li>
                       </ul>
                     </div>
                   </div>

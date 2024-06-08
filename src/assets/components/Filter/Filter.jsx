@@ -38,11 +38,13 @@ export default function DrawerFilters({
   onOrganizationChange,
 }) {
   const [open, setOpen] = React.useState(false);
-  const [selectedCategories, setSelectedCategories] = React.useState([]);
-  const [selectedOrganizations, setSelectedOrganizations] = React.useState([]);
+  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [selectedOrganization, setSelectedOrganization] = React.useState(null);
   const [categories, setCategories] = React.useState([]);
   const [organizations, setOrganizations] = React.useState([]);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [categoryLocked, setCategoryLocked] = React.useState(false);
+  const [organizationLocked, setOrganizationLocked] = React.useState(false);
 
   React.useEffect(() => {
     const fetchCategories = async () => {
@@ -73,27 +75,24 @@ export default function DrawerFilters({
   }, []);
 
   const handleCardsClick = (itemName) => {
-    const updatedCategories = selectedCategories.includes(itemName)
-      ? selectedCategories.filter((category) => category !== itemName)
-      : [...selectedCategories, itemName];
-
-    setSelectedCategories(updatedCategories);
-    onCategoryChange(updatedCategories); // Передача выбранных категорий в родительский компонент
+    if (categoryLocked && selectedCategory !== itemName) {
+      setSnackbarOpen(true);
+      return;
+    }
+    const updatedCategory = selectedCategory === itemName ? null : itemName;
+    setSelectedCategory(updatedCategory);
+    setCategoryLocked(!!updatedCategory);
   };
 
   const handleCardClick = (itemName) => {
-    const updatedOrganizations = selectedOrganizations.includes(itemName)
-      ? selectedOrganizations.filter(
-          (organization) => organization !== itemName
-        )
-      : [...selectedOrganizations, itemName];
-
-    if (updatedOrganizations.length <= 1) {
-      setSelectedOrganizations(updatedOrganizations);
-      onOrganizationChange(updatedOrganizations); // Передача выбранных организаций в родительский компонент
-    } else {
+    if (organizationLocked && selectedOrganization !== itemName) {
       setSnackbarOpen(true);
+      return;
     }
+    const updatedOrganization =
+      selectedOrganization === itemName ? null : itemName;
+    setSelectedOrganization(updatedOrganization);
+    setOrganizationLocked(!!updatedOrganization);
   };
 
   const handleSnackbarClose = () => {
@@ -101,17 +100,19 @@ export default function DrawerFilters({
   };
 
   const getCategoryIndex = (categoryName) => {
-    return selectedCategories.indexOf(categoryName) + 1;
+    return selectedCategory === categoryName ? 1 : 0;
   };
 
   const handleReset = () => {
-    setSelectedCategories([]);
-    setSelectedOrganizations([]);
-    onCategoryChange([]);
-    onOrganizationChange([]);
+    setSelectedCategory(null);
+    setSelectedOrganization(null);
+    setCategoryLocked(false);
+    setOrganizationLocked(false);
   };
 
   const handleSave = () => {
+    onCategoryChange(selectedCategory ? [selectedCategory] : []);
+    onOrganizationChange(selectedOrganization ? [selectedOrganization] : []);
     setOpen(false);
   };
 
@@ -122,8 +123,15 @@ export default function DrawerFilters({
         color="neutral"
         startDecorator={<TuneIcon />}
         onClick={() => setOpen(true)}
+        sx={{
+          "@media (max-width: 546px)": {
+            "& .button-text": {
+              display: "none",
+            },
+          },
+        }}
       >
-        Фильтрация
+        <span className="button-text">Фильтрация</span>
       </Button>
       <Drawer
         size="md"
@@ -184,7 +192,7 @@ export default function DrawerFilters({
                         "&:hover": {
                           boxShadow: "0px 0px 10px 5px #00000054",
                         },
-                        ...(selectedCategories.includes(category.name) && {
+                        ...(selectedCategory === category.name && {
                           border: "2px solid black",
                         }),
                       }}
@@ -233,7 +241,7 @@ export default function DrawerFilters({
                             {category.name}
                           </Typography>
                           <Checkbox
-                            checked={selectedCategories.includes(category.name)}
+                            checked={selectedCategory === category.name}
                             sx={{ display: "none" }}
                           />
                         </Box>
@@ -269,9 +277,7 @@ export default function DrawerFilters({
                         "&:hover": {
                           boxShadow: "0px 0px 10px 5px #00000054",
                         },
-                        ...(selectedOrganizations.includes(
-                          organization.name
-                        ) && {
+                        ...(selectedOrganization === organization.name && {
                           border: "2px solid black",
                         }),
                       }}
@@ -297,14 +303,12 @@ export default function DrawerFilters({
                           />
                           <Typography
                             level="title-md"
-                            sx={{ wordWrap: "break-word" }}
+                            sx={{ wordWrap: "break" }}
                           >
                             {organization.name}
                           </Typography>
                           <Checkbox
-                            checked={selectedOrganizations.includes(
-                              organization.name
-                            )}
+                            checked={selectedOrganization === organization.name}
                             sx={{ display: "none" }}
                           />
                         </Box>
@@ -337,7 +341,7 @@ export default function DrawerFilters({
           severity="warning"
           sx={{ width: "100%" }}
         >
-          Можно выбрать не более одной организаций!
+          Можно выбрать не более одной категории или одной организации!
         </MuiAlert>
       </Snackbar>
     </React.Fragment>

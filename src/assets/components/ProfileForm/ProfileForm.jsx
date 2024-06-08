@@ -13,7 +13,6 @@ import person3 from "../../images/person3.png";
 import person4 from "../../images/person4.png";
 import person5 from "../../images/person5.png";
 import person6 from "../../images/person6.png";
-
 const Alert = forwardRef((props, ref) => {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -132,7 +131,7 @@ const Personal = () => {
             <div className="ProfileForm__flex">
               <div className="ProfileForm__avatar">
                 {isLoading ? (
-                  <img src={avatar} alt="Avatar" />
+                  <img className="ProfileForm__skeleton" src={avatar} alt="Avatar" />
                 ) : (
                   <div className="ProfileForm__ava-img">
                     {selectedImage ? (
@@ -144,7 +143,6 @@ const Personal = () => {
                         border={50}
                         color={[255, 255, 255, 0.6]}
                         scale={scale}
-                        rotate={rotate} // передаем угол поворота
                       />
                     ) : (
                       <img src={avatar} alt="Avatar" />
@@ -246,6 +244,7 @@ const Personal = () => {
                         ))}
                       </div>
                     )}
+
                   </div>
                 </div>
               </div>
@@ -285,6 +284,69 @@ const Personal = () => {
                       />
                     </div>
                   </div>
+                  <div className="ProfileForm__btn">
+                    <button
+                      style={{}}
+                      className="ProfileForm__reset"
+                      type="button"
+                      onClick={handleButtonClickReset}
+                    >
+                      Сбросить
+                    </button>
+
+                    <button
+                      className="ProfileForm__saved"
+                      type="button"
+                      onClick={handleSave}
+                    >
+                      Сохранить
+                    </button>
+                    <button
+                      className="ProfileForm__edit"
+                      type="button"
+                      onClick={handleBtnEdit}
+                    >
+                      Редактировать
+                      <img src={edit} alt="" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+
+              <div className="ProfileForm__nick-media">
+                <form action="">
+                  <div className="ProfileForm__surname">
+                    <div className="ProfileForm__input-container">
+                      <input
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        readOnly={!isEditingLastName}
+                      />
+                    </div>
+                  </div>
+                  <div className="ProfileForm__name">
+                    <div className="ProfileForm__input-container">
+                      <input
+                        type="text"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        readOnly={!isEditingFirstName}
+                      />
+                    </div>
+                  </div>
+                  <div className="ProfileForm__nickname">
+                    <div className="ProfileForm__input-container">
+                      <input
+                        type="text"
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
+                        readOnly={!isEditingNickname}
+                      />
+                    </div>
+                  </div>
+
                   <div className="ProfileForm__btn">
                     <button
                       style={{}}

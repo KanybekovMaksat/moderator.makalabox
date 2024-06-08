@@ -68,10 +68,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-
-
-
-
 const PrimarySearchAppBar = observer(() => {
   const { store } = useContext(Context);
 
@@ -170,19 +166,11 @@ const PrimarySearchAppBar = observer(() => {
   return (
     <div className="container">
       <Box sx={{ flexGrow: 1 }}>
-        <StyledAppBar position="fixed" >
+        <StyledAppBar position="fixed">
           <Toolbar>
             <h2
               className="Header__h2"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                columnGap: "8px",
-                color: "black",
-                fontSize: "28px",
-                whiteSpace: "nowrap",
-                marginRight:"10px"
-              }}
+
             >
               <img
                 style={{ width: "40px", marginBottom: "7px" }}
@@ -190,6 +178,13 @@ const PrimarySearchAppBar = observer(() => {
                 alt=""
               />
               Makala Box
+            </h2>
+            <h2 className="Header__h2-media">
+              <img
+                style={{ width: "40px", marginBottom: "7px" }}
+                src={box}
+                alt=""
+              />
             </h2>
             <Box sx={{ flexGrow: 1.5 }} />
 

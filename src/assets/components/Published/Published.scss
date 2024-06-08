@@ -40,9 +40,10 @@
 
 .flex__card {
   display: flex;
-  align-items: stretch; /* Ensure all items stretch to the same height */
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: stretch; /* Ensure all items stretch to the same height */
+  gap: 20px;
 }
 
 .Card {
@@ -51,6 +52,9 @@
     flex-wrap: wrap;
   }
   &__block {
+    flex: 1 1 30%; /* Grow to fill space, but keep a minimum size */
+    max-width: 365px; /* Prevent growing too large */
+    margin: 0 10px; /* Adjust margin as needed */
     padding: 30px;
     width: 365px;
     margin-bottom: 30px;
@@ -123,12 +127,37 @@
       color: rgb(94, 94, 94);
       font-size: 15px;
       padding-left: 60px;
-      min-height: 90px; // Adjust this value to reserve enough space for three categories
+      min-height: 90px; 
 
       li {
         list-style: disc;
         padding-top: 5px;
-        height: 35px; // Ensure each category item has a fixed height
+        height: 35px; 
+      }
+      li:empty::before {
+        content: none;
+      }
+    }
+  }
+  &__organization {
+    h4 {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgb(94, 94, 94);
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+  }
+
+  &__org {
+    ul {
+      color: rgb(94, 94, 94);
+      font-size: 15px;
+      font-weight: 500;
+      padding-left: 60px;
+
+      li {
+        padding-top: 5px;
       }
       li:empty::before {
         content: none;
@@ -139,7 +168,7 @@
     margin-top: auto;
     margin-top: 30px;
     column-gap: 10px;
-    margin-left: 50px; // Pushes button to the bottom of the card
+    margin-left: 50px; 
     button:hover {
       transform: translateY(-3px) scale(1.05);
     }
@@ -188,16 +217,33 @@
 @media screen and (max-width: 1227px) {
 
   .flex__card{
-    flex-wrap: wrap;
     max-width: 1094px;
     justify-content: space-evenly;
-    align-items: center;
+    gap: 20px;
   }
 }
 @media screen and (max-width: 850px) {
 
   .flex__card{
     max-width: 716px;
+    justify-content: space-evenly;
+    gap: 20px;
+  }
+  .Card__block {
+    flex: 1 1 45%; 
+  }
+}
+@media screen and (max-width:562px) {
 
+  .Filter__content h2{
+    font-size: 27px;
+  }
+
+  .flex__card {
+    justify-content: center;
+  }
+
+  .Card__block {
+    flex: 1 1 100%; 
   }
 }

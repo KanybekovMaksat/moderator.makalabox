@@ -70,7 +70,7 @@ const ModeratorPage = () => {
         <>
           <Header />
           <ProfileForm />
-          <Published posts={posts} />
+          <Published posts={posts}  />
           <Snackbar
             open={openSnackbar}
             autoHideDuration={6000}

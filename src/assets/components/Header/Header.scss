@@ -1,0 +1,21 @@
+.Header__h2-media img {
+  display: none;
+}
+.Header__h2 {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  color: black;
+  font-size: 28px;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+@media screen and (max-width: 490px) {
+  .Header__h2 {
+    display: none;
+  }
+  .Header__h2-media img {
+    display: block;
+    margin-right: 30px;
+  }
+}

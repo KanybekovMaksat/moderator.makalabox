@@ -76,10 +76,7 @@ $btnColor2: black;
     justify-content: space-between;
   }
 
-  &__surname img {
-    position: absolute;
-    right: 15px;
-  }
+
   &__edit{
     width: 128px;
     border-radius: 10px;
@@ -124,14 +121,7 @@ $btnColor2: black;
       color: white;
     }
   }
-  &__name img {
-    position: absolute;
-    right: 15px;
-  }
-  &__nickname img {
-    position: absolute;
-    right: 15px;
-  }
+
 
   &__surname,
   &__name,
@@ -254,9 +244,18 @@ $btnColor2: black;
   margin-right: 10px;
 }
 
-.ProfileForm__input-container img {
-  cursor: pointer;
+
+.ProfileForm__input-container {
+  display: flex;
+  align-items: center;
 }
+
+.ProfileForm__input-container input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+
 
 .Profile__btn {
   display: flex;
@@ -264,6 +263,11 @@ $btnColor2: black;
   justify-content: sp;
 }
 .avatar__flex-one {
+  display: none;
+}
+
+
+.ProfileForm__nick-media{
   display: none;
 }
 @media screen and (max-width: 941px) {
@@ -308,5 +312,86 @@ $btnColor2: black;
 
   
 }
+
+@media screen and (max-width:630px) {
+
+  .ProfileForm__nick{
+    display: none;
+  }
+  .ProfileForm__nick-media{
+    display: block;
+  }
+}
+
+
+@media  screen and (max-width:550px) {
+
+  .ProfileForm__ava-img {
+    width: 200px;
+    height: 200px;
+  }
+  .ProfileForm__avatar{
+    display: grid;
+    justify-content: center;
+  }
+}
+
+
+@media screen and (max-width:480px) {
+
+  .ProfileForm__btn{
+    display: grid;
+    justify-content: center;
+    margin-top: 10px;
+
+  }
+  .ProfileForm__btn button{
+
+    margin-bottom: 10px;
+    width: 200px;
+
+  }
+  .ProfileForm__nick-media input{
+    width: 200px;
+  }
+}
+.ProfileForm__nick-media {
+  padding-top: 30px;
+
+}
+
+.ProfileForm__nick-media input {
+  flex: 1;
+  width: 300px;
+  height: 38px;
+  padding-left: 12px;
+  border-radius: 10px;
+  margin-left: 50px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: left;
+  border: 1.5px solid #9c8e8e;
+  outline: none;
+
+  
+
+  &:focus {
+    outline: none;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
