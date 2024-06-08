@@ -12,8 +12,8 @@ import MuiAlert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
 
 const StyledSection = styled.section`
-  padding: 10px 50px 50px 50px;
   background-color: #f5f5f5;
+  heigth:100vh;
 `;
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -54,9 +54,7 @@ const IsLoggedIn = () => {
     setPasswordFocused(false);
     if (email.trim() === "") {
       setPasswordError("");
-    } else {
-      validatePassword();
-    }
+    } 
   };
 
   const handlePasswordFocus = () => {
@@ -71,16 +69,9 @@ const IsLoggedIn = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     setIsFilled(e.target.value !== "" && email !== "");
-    validatePassword();
   };
 
-  const validatePassword = () => {
-    if (password.trim() === "") {
-      setPasswordError("Введите пароль");
-    } else {
-      setPasswordError("");
-    }
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,10 +80,7 @@ const IsLoggedIn = () => {
       setEmailError("Введите адрес электронной почты");
       valid = false;
     }
-    if (password.trim() === "") {
-      setPasswordError("Введите пароль");
-      valid = false;
-    }
+
     if (email.trim() !== "" && password.trim() !== "" && !validator.isEmail(email)) {
       setEmailError("Вы не правильно ввели адрес электронной почты");
       valid = false;

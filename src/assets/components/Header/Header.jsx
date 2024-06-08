@@ -126,7 +126,7 @@ const PrimarySearchAppBar = observer(() => {
           Профиль
         </MenuItem>
       </Link>
-      <Link to="/login">
+      <Link to="/">
         <MenuItem style={{ color: "black" }} onClick={() => store.logout()}>
           Выйти
         </MenuItem>

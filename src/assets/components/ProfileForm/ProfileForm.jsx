@@ -19,13 +19,13 @@ const Alert = forwardRef((props, ref) => {
 });
 
 const Personal = () => {
-  const [firstName, setFirstName] = useState("Введите ваше фамилие");
-  const [lastName, setLastName] = useState("Введеите ваше имя");
+  const [firstName, setFirstName] = useState("Ваше Имя");
+  const [lastName, setLastName] = useState("Ваше Фамилие");
   const [nickname, setNickname] = useState("moderator");
   const [users, setUsers] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [scale, setScale] = useState(1);
-  const [rotate, setRotate] = useState(0); // добавили состояние для угла поворота
+  const [rotate, setRotate] = useState(0); 
   const [isEditingFirstName, setIsEditingFirstName] = useState(false);
   const [isEditingLastName, setIsEditingLastName] = useState(false);
   const [isEditingNickname, setIsEditingNickname] = useState(false);
@@ -62,8 +62,8 @@ const Personal = () => {
     localStorage.removeItem("lastName");
     localStorage.removeItem("nickname");
     localStorage.removeItem("selectedImage");
-    setFirstName("Ваше Фамилия");
-    setLastName("Ваше Имя");
+    setFirstName("Ваше Имя");
+    setLastName("Ваше Фамилие");
     setNickname("moderator");
     setSelectedImage(null);
     setScale(1);
@@ -103,9 +103,7 @@ const Personal = () => {
     setScale(newScale);
   };
 
-  const handleRotateChange = (newRotate) => {
-    setRotate(newRotate);
-  };
+
 
   const handleAvatarSelect = (image) => {
     setSelectedImage(image);
@@ -213,26 +211,7 @@ const Personal = () => {
                         }
                       />
                     </div>
-                    <div
-                      className="ProfileForm__rotate"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        columnGap: "10px",
-                      }}
-                    >
-                      <label htmlFor="">Поворот</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="360"
-                        step="1"
-                        value={rotate}
-                        onChange={(e) =>
-                          handleRotateChange(parseFloat(e.target.value))
-                        }
-                      />
-                    </div>
+
                   </div>
 
                   <div className="ProfileForm__select-avatar">

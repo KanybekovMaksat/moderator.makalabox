@@ -23,8 +23,10 @@ const ModeratorPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
-    if (location.state && location.state.loginSuccess) {
+    const loginSuccessFlag = localStorage.getItem("loginSuccessShown");
+    if (location.state && location.state.loginSuccess && !loginSuccessFlag) {
       setOpenSnackbar(true);
+      localStorage.setItem("loginSuccessShown", "true");
     }
   }, [location]);
 
@@ -34,6 +36,7 @@ const ModeratorPage = () => {
     }
     setOpenSnackbar(false);
   };
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -58,30 +61,28 @@ const ModeratorPage = () => {
   }, [store]); // Добавляем 'store' в массив зависимостей
 
   return (
-    <>
-      <div>
-        {isLoading ? (
-          <LoadingAnimation />
-        ) : error ? (
-          <p>Ошибка: {error}</p>
-        ) : (
-          <>
-            <Header />
-            <ProfileForm />
-            <Published posts={posts} />
-            <Snackbar
-              open={openSnackbar}
-              autoHideDuration={600}
-              onClose={handleCloseSnackbar}
-            >
-              <Alert onClose={handleCloseSnackbar} severity="success">
-                Вы успешно вошли
-              </Alert>
-            </Snackbar>
-          </>
-        )}
-      </div>
-    </>
+    <div>
+      {isLoading ? (
+        <LoadingAnimation />
+      ) : error ? (
+        <p>Ошибка: {error}</p>
+      ) : (
+        <>
+          <Header />
+          <ProfileForm />
+          <Published posts={posts} />
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert onClose={handleCloseSnackbar} severity="success">
+              Вы успешно вошли
+            </Alert>
+          </Snackbar>
+        </>
+      )}
+    </div>
   );
 };
 
