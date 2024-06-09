@@ -21,7 +21,6 @@ import iconLeader from "../../images/leader.png";
 import iconProgramming from "../../images/programming.png";
 import icondevelopYourself from "../../images/developYourself.png";
 import iconSport from "../../images/sport.png";
-
 import $api from "../../../http";
 
 const icons = [
@@ -31,7 +30,7 @@ const icons = [
   iconProgramming,
   icondevelopYourself,
   iconSport,
-]; // Массив иконок
+]; 
 
 export default function DrawerFilters({
   onCategoryChange,
@@ -111,8 +110,12 @@ export default function DrawerFilters({
   };
 
   const handleSave = () => {
-    onCategoryChange(selectedCategory ? [selectedCategory] : []);
-    onOrganizationChange(selectedOrganization ? [selectedOrganization] : []);
+    if (onCategoryChange && typeof onCategoryChange === 'function') {
+      onCategoryChange(selectedCategory ? [selectedCategory] : []);
+    }
+    if (onOrganizationChange && typeof onOrganizationChange === 'function') {
+      onOrganizationChange(selectedOrganization ? [selectedOrganization] : []);
+    }
     setOpen(false);
   };
 

@@ -24,28 +24,29 @@ export default function RecipeReviewCard({ searchQuery }) {
   const { store } = useContext(Context);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await $api.get(`articles/moderation/`);
-        const fetchedPosts = response.data.results;
-        setPosts(fetchedPosts);
-        localStorage.setItem("cachedPosts", JSON.stringify(fetchedPosts));
+useEffect(() => {
+  const fetchPosts = async () => {
+    try {
+      const response = await $api.get(`articles/moderation/`);
+      const fetchedPosts = response.data.results;
+      setPosts(fetchedPosts || []); // Убедитесь, что fetchedPosts массив
+      localStorage.setItem("cachedPosts", JSON.stringify(fetchedPosts || []));
+      setIsLoading(false);
+    } catch (e) {
+      if (e.response?.status === 401) {
+        await store.checkAuth();
+      } else {
+        console.log(e);
+        setError("Ошибка загрузки данных");
         setIsLoading(false);
-      } catch (e) {
-        if (e.response?.status === 401) {
-          await store.checkAuth();
-        } else {
-          console.log(e);
-          setError("Ошибка загрузки данных");
-          setIsLoading(false);
-        }
       }
-    };
+    }
+  };
 
-    setIsLoading(true);
-    fetchPosts();
-  }, [store]);
+  setIsLoading(true);
+  fetchPosts();
+}, [store]);
+
 
   useEffect(() => {
     let filtered = posts;
@@ -71,16 +72,10 @@ export default function RecipeReviewCard({ searchQuery }) {
       );
     } 
 
-    if (selectedOrganization.length > 0) {
-      filtered = filtered.filter((post) =>
-        post.organization.some((org) =>
-          selectedOrganization.includes(org)
-        )
-      );
-    }
+
 
     setFilteredPosts(filtered);
-  }, [searchQuery, posts, selectedCategories, selectedOrganization]);
+  }, [searchQuery, posts, selectedCategories]);
 
   const handleFilterChange = (selectedCategories) => {
     setSelectedCategories(selectedCategories);
