@@ -20,6 +20,21 @@
     font-size: 48px;
     font-weight: 500;
   }
+  &__FilterBtn{
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+
+
+  }
+  &__trash{
+    width: 50px;
+    height: 35px;
+    border-radius: 10px;
+    border: 1px solid black;
+    background: none;
+
+  }
 }
 
 .filter__block {

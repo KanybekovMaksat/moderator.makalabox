@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Context } from "../../../main";
 import { animateScroll as scroll } from "react-scroll";
 import dayjs from "dayjs";
@@ -13,6 +13,7 @@ import "./Published.scss";
 import Filter from "../Filter/Filter";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
 export default function RecipeReviewCard({ searchQuery }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -83,11 +84,10 @@ export default function RecipeReviewCard({ searchQuery }) {
         {!searchQuery && (
           <div className="Filter__content">
             <h2>Статьи для проверки</h2>
-            <Filter onCategoryChange={handleFilterChange} />{" "}
-            {/* Добавляем DrawerFilters */}
+
+            <Filter onCategoryChange={handleFilterChange} />
           </div>
         )}
-
 
         <div className="flex__card">
           {isLoading
