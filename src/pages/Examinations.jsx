@@ -3,9 +3,7 @@ import ExaminationArticle from "../assets/components/ExaminationaAticle/Examinat
 const Examinations = () => {
   return (
     <>
-      <div className="container">
         <ExaminationArticle />
-      </div>
     </>
   );
 };

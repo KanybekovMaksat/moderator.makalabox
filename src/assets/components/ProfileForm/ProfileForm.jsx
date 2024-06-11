@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, forwardRef } from "react";
 import AvatarEditor from "react-avatar-editor";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import "./ProfileForm.scss";
 import avatar from "../../images/Profile-ava.png";
 import download from "../../images/download.png";
 import trash from "../../images/trash.png";
@@ -146,7 +145,6 @@ const Personal = () => {
                         border={50}
                         color={[255, 255, 255, 0.6]}
                         scale={scale}
-                        rotate={rotate} // передаем угол поворота
                       />
                     ) : (
                       <img src={avatar} alt="Avatar" />

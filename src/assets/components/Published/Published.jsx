@@ -10,12 +10,12 @@ import eye from "../../images/eye.svg";
 import icon from "../../images/examinationIcon.png";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import "./Published.scss";
 import Filter from "../Filter/Filter";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Header from "../Header/Header"
 
-export default function RecipeReviewCard({ searchQuery }) {
+export default function Published({ searchQuery }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -89,7 +89,7 @@ export default function RecipeReviewCard({ searchQuery }) {
             <Filter onCategoryChange={handleFilterChange} />
           </div>
         )}
-
+        <Published searchQuery={searchQuery} />
         <div className="flex__card">
           {isLoading
             ? Array.from({ length: 3 }).map((_, index) => (
@@ -103,14 +103,20 @@ export default function RecipeReviewCard({ searchQuery }) {
                       <p className="Card__date">
                         <Skeleton width={180} height={20} />
                       </p>
+                      <p className="Card__eye">
+                        <Skeleton width={100} height={20} />
+                      </p>
                     </div>
                   </div>
                   <h2 className="Card__title">
                     {" "}
-                    <Skeleton width={250} height={25} />{" "}
+                    <Skeleton width={750} height={35} />
+                    <Skeleton width={650} height={25} />
+                    <Skeleton width={650} height={25} />
                   </h2>
+
                   <div className="Card__photo">
-                    <Skeleton width={289} height={268} />
+                    <Skeleton width={800} height={268} />
                   </div>
                   <div className="Card__category">
                     <h4>Категории</h4>
@@ -122,6 +128,17 @@ export default function RecipeReviewCard({ searchQuery }) {
                             <Skeleton width={90} height={20} />
                           </li>
                         ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="Card__organization">
+                    <h4>Организация</h4>
+                    <div className="Card__org">
+                      <ul>
+                        <li>
+                          {" "}
+                          <Skeleton width={90} height={20} />{" "}
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -177,14 +194,11 @@ export default function RecipeReviewCard({ searchQuery }) {
                       </ul>
                     </div>
                   </div>
-                  <div className="Card__category">
-                    <h4>Организация:</h4>
-                    <div className="Card__categories">
+                  <div className="Card__organization">
+                    <h4>Организация</h4>
+                    <div className="Card__org">
                       <ul>
-                        {post.organization.map((org, index) => (
-                          <li key={index}>{org}</li>
-                        ))}
-
+                        <li> {post.organization.name}</li>
                       </ul>
                     </div>
                   </div>
@@ -207,6 +221,6 @@ export default function RecipeReviewCard({ searchQuery }) {
   );
 }
 
-RecipeReviewCard.propTypes = {
+Published.propTypes = {
   searchQuery: PropTypes.string,
 };

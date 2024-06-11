@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import validator from "validator";
-import "./IsLoggedIn.scss";
 import box from "../../images/box.png";
 import styled from "styled-components";
 import { Context } from "../../../main";

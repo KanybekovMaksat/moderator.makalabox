@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import user from "../../images/user (2).png";
 import HeaderNotSearch from "../HeaderNonSearch/HeaderNonSearch";
 import dayjs from "dayjs";
-import "./ExaminationArticle.scss";
 import $api from "../../../http";
 import LoadingAnimation from "../Loading/Loading";
 import ArticleViewer from "../BlockNote/BlockNote";
@@ -49,6 +48,9 @@ const ExaminationArticle = () => {
   }, [id]);
 
   const handleApprove = async () => {
+    handleDialogClose()
+
+
     try {
       await $api.patch(`articles/moderation/${id}/`, { status: "approved" });
       showMessage("Статья успешно одобрена", "green");
@@ -60,6 +62,7 @@ const ExaminationArticle = () => {
   };
 
   const handleReject = async () => {
+    handleDialogClose()
     try {
       await $api.patch(`articles/moderation/${id}/`, {
         status: "rejected",
@@ -78,21 +81,10 @@ const ExaminationArticle = () => {
     setDialogOpen(true);
   };
 
-  const handleDialogClose = (confirm) => {
-    setDialogOpen(false);
-    if (confirm) {
-      if (confirmAction === "reject") {
-        setArticleVisible(false);
-        showMessage("Вы отклонили статью", "red");
-        navigateAfterDelay(`/moderator-page`, 3000);
-      } else if (confirmAction === "publish") {
-        setArticleVisible(false);
-        showMessage("Вы дали разрешение на публикацию статьи", "green");
-        navigateAfterDelay("/moderator-page", 3000);
-      }
-    }
-    setConfirmAction(null);
-  };
+  const handleDialogClose = () => {
+    setDialogOpen(false)
+    setConfirmAction(null)
+  }
 
   const showMessage = (text, color) => {
     setMessageText(text);
@@ -132,6 +124,7 @@ const ExaminationArticle = () => {
         <main>
           <HeaderNotSearch />
           <section className="ExaminationArticle__section">
+            <div className="container">
               <div className="ExaminationArticle__content">
                 {/* <div className="ExaminationArticle__photo">
                   <img src={post.photo} alt="" />
@@ -183,7 +176,7 @@ const ExaminationArticle = () => {
                 <hr />
                 <h2 className="ExaminationArticle__title">{post.title}</h2>
 
-                <div className="ExaminationArticle__text">
+                <div className="ExaminationArticle__block">
                   {preLoad ? <ArticleViewer body={post.body} /> : null}
                 </div>
               </div>
@@ -205,6 +198,7 @@ const ExaminationArticle = () => {
                 messageText={messageText}
                 messageColor={messageColor}
               />
+            </div>
           </section>
         </main>
       </>
