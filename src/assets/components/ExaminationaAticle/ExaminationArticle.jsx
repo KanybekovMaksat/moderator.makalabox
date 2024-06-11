@@ -132,7 +132,6 @@ const ExaminationArticle = () => {
         <main>
           <HeaderNotSearch />
           <section className="ExaminationArticle__section">
-            <div className="container">
               <div className="ExaminationArticle__content">
                 {/* <div className="ExaminationArticle__photo">
                   <img src={post.photo} alt="" />
@@ -206,7 +205,6 @@ const ExaminationArticle = () => {
                 messageText={messageText}
                 messageColor={messageColor}
               />
-            </div>
           </section>
         </main>
       </>

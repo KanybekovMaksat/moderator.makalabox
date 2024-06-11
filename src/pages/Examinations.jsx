@@ -1,11 +1,13 @@
-import ExaminationArticle from '../assets/components/ExaminationaAticle/ExaminationArticle'
+import ExaminationArticle from "../assets/components/ExaminationaAticle/ExaminationArticle";
 
 const Examinations = () => {
   return (
     <>
-      <ExaminationArticle/>
+      <div className="container">
+        <ExaminationArticle />
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Examinations
+export default Examinations;

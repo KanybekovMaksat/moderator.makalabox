@@ -140,7 +140,6 @@ const IsLoggedIn = () => {
     <main>
       <StyledSection>
         <section className="IsLoggedIn__section">
-          <div className="container">
             <div className="IsLoggedIn__content">
               <img className="IsLoggedIn__logo" src={box} alt="" />
               <h3 className="IsLoggedIn__title">Вход в профиль</h3>
@@ -201,7 +200,6 @@ const IsLoggedIn = () => {
                 </div>
               </form>
             </div>
-          </div>
         </section>
       </StyledSection>
       <Snackbar

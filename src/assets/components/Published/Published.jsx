@@ -6,6 +6,7 @@ import user from "../../images/user (2).png";
 import $api from "../../../http";
 import calendar from "../../images/calendar.png";
 import writer from "../../images/writer.png";
+import eye from "../../images/eye.svg";
 import icon from "../../images/examinationIcon.png";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -79,8 +80,8 @@ export default function RecipeReviewCard({ searchQuery }) {
   };
 
   return (
-    <div className="Card__content">
-      <div className="container">
+    <section className="Card__section">
+      <div className="Card__content">
         {!searchQuery && (
           <div className="Filter__content">
             <h2>Статьи для проверки</h2>
@@ -136,40 +137,54 @@ export default function RecipeReviewCard({ searchQuery }) {
                       src={post.author.photo ? post.author.photo : user}
                       alt="Author Avatar"
                       style={{
-                        width: "54px",
-                        height: "54px",
+                        width: "2.5rem",
+                        height: "2.5rem",
                         borderRadius: "50%",
                       }}
                     />
                     <div className="Card__author">
                       <p className="Card__writer">
-                        <img src={writer} alt="" style={{ width: "23px" }} />
+                        <img src={writer} alt="" style={{ width: "25px" }} />
                         {post.author.fullName}
                       </p>
                       <p className="Card__date">
                         <img src={calendar} alt="" />
                         {dayjs(post.created)
                           .locale("ru")
-                          .format("DD MMM, HH:MM, YYYY")}
+                          .format("DD MMM/ HH:MM/ YYYY")}
+                      </p>
+                      <p className="Card__eye">
+                        <img src={eye} alt="" />
+                        {post.readTime} мин
                       </p>
                     </div>
                   </div>
                   <h2 className="Card__title">{post.title}</h2>
+                  <p className="Card__subtitle">{post.subtitle}</p>
                   <div className="Card__photo">
                     <img src={post.photo} alt="Post Photo" />
                   </div>
                   <div className="Card__category">
-                    <h4>Категории</h4>
+                    <h4>Категории:</h4>
                     <div className="Card__categories">
                       <ul>
                         {post.categories.map((category, index) => (
                           <li key={index}>{category}</li>
                         ))}
-                        {Array.from({ length: 3 - post.categories.length }).map(
-                          (_, index) => (
-                            <li key={`empty-${index}`}>пусто</li>
-                          )
-                        )}
+                        {Array.from({}).map((_, index) => (
+                          <li key={`empty-${index}`}></li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="Card__category">
+                    <h4>Организация:</h4>
+                    <div className="Card__categories">
+                      <ul>
+                        {post.organization.map((org, index) => (
+                          <li key={index}>{org}</li>
+                        ))}
+
                       </ul>
                     </div>
                   </div>
@@ -188,7 +203,7 @@ export default function RecipeReviewCard({ searchQuery }) {
               ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

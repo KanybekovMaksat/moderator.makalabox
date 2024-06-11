@@ -3,6 +3,10 @@ $btnColor2: black;
 .ProfileForm {
   &__section {
     margin: 100px 50px 0 50px;
+
+  }
+  &__content{
+    background: #fff;
   }
   &__ava-img {
     width: 199px;
@@ -22,7 +26,7 @@ $btnColor2: black;
   &__flex {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 57px;
     flex-wrap: wrap;
   }

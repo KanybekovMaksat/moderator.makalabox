@@ -59,25 +59,27 @@ const ModeratorPage = () => {
 
   return (
     <>
-      <div>
+      <div style={{ background: "#009dff0e" }}>
         {isLoading ? (
           <LoadingAnimation />
         ) : error ? (
           <p>Ошибка: {error}</p>
         ) : (
           <>
-            <Header />
-            <ProfileForm />
-            <Published posts={posts} />
-            <Snackbar
-              open={openSnackbar}
-              autoHideDuration={600}
-              onClose={handleCloseSnackbar}
-            >
-              <Alert onClose={handleCloseSnackbar} severity="success">
-                Вы успешно вошли
-              </Alert>
-            </Snackbar>
+            <div className="container">
+              <Header />
+              <ProfileForm />
+              <Published posts={posts} />
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={600}
+                onClose={handleCloseSnackbar}
+              >
+                <Alert onClose={handleCloseSnackbar} severity="success">
+                  Вы успешно вошли
+                </Alert>
+              </Snackbar>
+            </div>
           </>
         )}
       </div>

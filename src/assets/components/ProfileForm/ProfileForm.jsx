@@ -130,7 +130,7 @@ const Personal = () => {
     <>
       <main>
         <section className="ProfileForm__section">
-          <div className="container">
+            <div className="ProfileForm__content">
             <div className="ProfileForm__flex">
               <div className="ProfileForm__avatar">
                 {isLoading ? (
@@ -335,7 +335,8 @@ const Personal = () => {
                 </form>
               </div>
             </div>
-          </div>
+            </div>
+
         </section>
       </main>
       <Snackbar

@@ -168,7 +168,6 @@ const PrimarySearchAppBar = observer(() => {
   );
 
   return (
-    <div className="container">
       <Box sx={{ flexGrow: 1 }}>
         <StyledAppBar position="fixed" >
           <Toolbar>
@@ -233,7 +232,6 @@ const PrimarySearchAppBar = observer(() => {
         {renderMobileMenu}
         {renderMenu}
       </Box>
-    </div>
   );
 });
 
