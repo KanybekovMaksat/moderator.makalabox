@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, forwardRef } from "react";
 import AvatarEditor from "react-avatar-editor";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import "./ProfileForm.scss";
 import avatar from "../../images/Profile-ava.png";
 import download from "../../images/download.png";
 import trash from "../../images/trash.png";
@@ -13,18 +12,19 @@ import person3 from "../../images/person3.png";
 import person4 from "../../images/person4.png";
 import person5 from "../../images/person5.png";
 import person6 from "../../images/person6.png";
+
 const Alert = forwardRef((props, ref) => {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const Personal = () => {
-  const [firstName, setFirstName] = useState("Ваше Имя");
-  const [lastName, setLastName] = useState("Ваше Фамилие");
+  const [firstName, setFirstName] = useState("Введите ваше фамилие");
+  const [lastName, setLastName] = useState("Введеите ваше имя");
   const [nickname, setNickname] = useState("moderator");
   const [users, setUsers] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [scale, setScale] = useState(1);
-  const [rotate, setRotate] = useState(0); 
+  const [rotate, setRotate] = useState(0); // добавили состояние для угла поворота
   const [isEditingFirstName, setIsEditingFirstName] = useState(false);
   const [isEditingLastName, setIsEditingLastName] = useState(false);
   const [isEditingNickname, setIsEditingNickname] = useState(false);
@@ -61,8 +61,8 @@ const Personal = () => {
     localStorage.removeItem("lastName");
     localStorage.removeItem("nickname");
     localStorage.removeItem("selectedImage");
-    setFirstName("Ваше Имя");
-    setLastName("Ваше Фамилие");
+    setFirstName("Ваше Фамилия");
+    setLastName("Ваше Имя");
     setNickname("moderator");
     setSelectedImage(null);
     setScale(1);
@@ -102,7 +102,9 @@ const Personal = () => {
     setScale(newScale);
   };
 
-
+  const handleRotateChange = (newRotate) => {
+    setRotate(newRotate);
+  };
 
   const handleAvatarSelect = (image) => {
     setSelectedImage(image);
@@ -127,11 +129,11 @@ const Personal = () => {
     <>
       <main>
         <section className="ProfileForm__section">
-          <div className="container">
+            <div className="ProfileForm__content">
             <div className="ProfileForm__flex">
               <div className="ProfileForm__avatar">
                 {isLoading ? (
-                  <img className="ProfileForm__skeleton" src={avatar} alt="Avatar" />
+                  <img src={avatar} alt="Avatar" />
                 ) : (
                   <div className="ProfileForm__ava-img">
                     {selectedImage ? (
@@ -209,7 +211,26 @@ const Personal = () => {
                         }
                       />
                     </div>
-
+                    <div
+                      className="ProfileForm__rotate"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <label htmlFor="">Поворот</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="360"
+                        step="1"
+                        value={rotate}
+                        onChange={(e) =>
+                          handleRotateChange(parseFloat(e.target.value))
+                        }
+                      />
+                    </div>
                   </div>
 
                   <div className="ProfileForm__select-avatar">
@@ -244,7 +265,6 @@ const Personal = () => {
                         ))}
                       </div>
                     )}
-
                   </div>
                 </div>
               </div>
@@ -312,71 +332,9 @@ const Personal = () => {
                   </div>
                 </form>
               </div>
-
-
-              <div className="ProfileForm__nick-media">
-                <form action="">
-                  <div className="ProfileForm__surname">
-                    <div className="ProfileForm__input-container">
-                      <input
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        readOnly={!isEditingLastName}
-                      />
-                    </div>
-                  </div>
-                  <div className="ProfileForm__name">
-                    <div className="ProfileForm__input-container">
-                      <input
-                        type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        readOnly={!isEditingFirstName}
-                      />
-                    </div>
-                  </div>
-                  <div className="ProfileForm__nickname">
-                    <div className="ProfileForm__input-container">
-                      <input
-                        type="text"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
-                        readOnly={!isEditingNickname}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="ProfileForm__btn">
-                    <button
-                      style={{}}
-                      className="ProfileForm__reset"
-                      type="button"
-                      onClick={handleButtonClickReset}
-                    >
-                      Сбросить
-                    </button>
-
-                    <button
-                      className="ProfileForm__saved"
-                      type="button"
-                      onClick={handleSave}
-                    >
-                      Сохранить
-                    </button>
-                    <button
-                      className="ProfileForm__edit"
-                      type="button"
-                      onClick={handleBtnEdit}
-                    >
-                      Редактировать
-                      <img src={edit} alt="" />
-                    </button>
-                  </div>
-                </form>
-              </div>
             </div>
-          </div>
+            </div>
+
         </section>
       </main>
       <Snackbar
