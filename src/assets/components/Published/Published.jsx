@@ -24,29 +24,28 @@ export default function RecipeReviewCard({ searchQuery }) {
   const { store } = useContext(Context);
   const navigate = useNavigate();
 
-useEffect(() => {
-  const fetchPosts = async () => {
-    try {
-      const response = await $api.get(`articles/moderation/`);
-      const fetchedPosts = response.data.results;
-      setPosts(fetchedPosts || []); // Убедитесь, что fetchedPosts массив
-      localStorage.setItem("cachedPosts", JSON.stringify(fetchedPosts || []));
-      setIsLoading(false);
-    } catch (e) {
-      if (e.response?.status === 401) {
-        await store.checkAuth();
-      } else {
-        console.log(e);
-        setError("Ошибка загрузки данных");
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await $api.get(`articles/moderation/`);
+        const fetchedPosts = response.data.results;
+        setPosts(fetchedPosts || []); // Убедитесь, что fetchedPosts массив
+        localStorage.setItem("cachedPosts", JSON.stringify(fetchedPosts || []));
         setIsLoading(false);
+      } catch (e) {
+        if (e.response?.status === 401) {
+          await store.checkAuth();
+        } else {
+          console.log(e);
+          setError("Ошибка загрузки данных");
+          setIsLoading(false);
+        }
       }
-    }
-  };
+    };
 
-  setIsLoading(true);
-  fetchPosts();
-}, [store]);
-
+    setIsLoading(true);
+    fetchPosts();
+  }, [store]);
 
   useEffect(() => {
     let filtered = posts;
@@ -55,12 +54,16 @@ useEffect(() => {
       const lowercasedQuery = searchQuery.toLowerCase();
       filtered = filtered.filter((post) => {
         const titleMatch = post.title.toLowerCase().includes(lowercasedQuery);
-        const authorMatch = post.author.fullName.toLowerCase().includes(lowercasedQuery);
-        const orgMatch = post.organization.name.toLowerCase().includes(lowercasedQuery);
+        const authorMatch = post.author.fullName
+          .toLowerCase()
+          .includes(lowercasedQuery);
+        const orgMatch = post.organization.name
+          .toLowerCase()
+          .includes(lowercasedQuery);
         const categoryMatch = post.categories.some((category) =>
           category.toLowerCase().includes(lowercasedQuery)
         );
-        return titleMatch || authorMatch || categoryMatch || orgMatch ;
+        return titleMatch || authorMatch || categoryMatch || orgMatch;
       });
     }
 
@@ -70,16 +73,14 @@ useEffect(() => {
           selectedCategories.includes(category)
         )
       );
-    } 
-
-
+    }
 
     setFilteredPosts(filtered);
   }, [searchQuery, posts, selectedCategories]);
 
   const handleFilterChange = (selectedCategories) => {
     setSelectedCategories(selectedCategories);
-    setSelectedOrganization()
+    setSelectedOrganization();
   };
 
   return (
@@ -152,7 +153,7 @@ useEffect(() => {
                       style={{
                         width: "54px",
                         height: "54px",
-                        borderRadius: "50%",
+                        borderRadius: "50",
                       }}
                     />
                     <div className="Card__author">

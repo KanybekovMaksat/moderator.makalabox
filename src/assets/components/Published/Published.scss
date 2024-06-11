@@ -50,6 +50,7 @@
   &__content {
     margin: 0 50px;
     flex-wrap: wrap;
+    overflow-y: auto;
   }
   &__block {
     flex: 1 1 30%; /* Grow to fill space, but keep a minimum size */
@@ -67,14 +68,14 @@
     box-sizing: border-box;
   }
 
-  &__block:hover {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    transform: scale(1.03);
-  }
+  // &__block:hover {
+  //   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  //   transform: scale(1.03);
+  // }
 
   &__author {
     p {
-      width: 300px;
+      width: 230px;
       padding-bottom: 5px;
       font-size: 16px;
       font-weight: 500;
@@ -245,5 +246,14 @@
 
   .Card__block {
     flex: 1 1 100%; 
+  }
+}
+@media screen and (max-width:459px) {
+  .Filter__content h2{
+    font-size: 22px;
+  }
+  .Filter__content{
+    margin: 30px 0;
+    padding-bottom: 30px;
   }
 }

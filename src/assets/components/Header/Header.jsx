@@ -68,12 +68,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
 const PrimarySearchAppBar = observer(() => {
   const { store } = useContext(Context);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [searchQuery, setSearchQuery] = useState("");
@@ -147,88 +146,109 @@ const PrimarySearchAppBar = observer(() => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem></MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="show 4 new mails"
+          color="inherit"
+        ></IconButton>
+        <p>Messages</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="show 17 new notifications"
+          color="inherit"
+        ></IconButton>
+        <p>Notifications</p>
+      </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
           aria-label="account of current user"
-          aria-controls={menuId}
+          aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
         >
           <AccountCircle />
         </IconButton>
-        <p>Профиль</p>
+        <p>Profile</p>
       </MenuItem>
     </Menu>
   );
 
   return (
-    <div className="container">
-      <Box sx={{ flexGrow: 1 }}>
-        <StyledAppBar position="fixed">
-          <Toolbar>
-            <h2
-              className="Header__h2"
+    <Box sx={{ flexGrow: 1 }}>
+      <StyledAppBar position="fixed">
+        <Toolbar>
+          <h2 className="Header__h2">
+            <img
+              style={{ width: "40px", marginBottom: "7px" }}
+              src={box}
+              alt=""
+            />
+            Makala Box
+          </h2>
+          <h2 className="Header__h2-media">
+            <img
+              style={{ width: "40px", marginBottom: "7px" }}
+              src={box}
+              alt=""
+            />
+          </h2>
+          <Box sx={{ flexGrow: 1.5 }} />
 
-            >
-              <img
-                style={{ width: "40px", marginBottom: "7px" }}
-                src={box}
-                alt=""
-              />
-              Makala Box
-            </h2>
-            <h2 className="Header__h2-media">
-              <img
-                style={{ width: "40px", marginBottom: "7px" }}
-                src={box}
-                alt=""
-              />
-            </h2>
-            <Box sx={{ flexGrow: 1.5 }} />
-
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Поиск…"
-                inputProps={{ "aria-label": "search" }}
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              {searchQuery && (
-                <IconButton
-                  onClick={handleClearSearch}
-                  sx={{ padding: 0, marginRight: 1 }}
-                >
-                  <img
-                    style={{ width: "13px", margin: "0 0 2px 0" }}
-                    src={close}
-                    alt="Очистить поиск"
-                  />
-                </IconButton>
-              )}
-            </Search>
-            <IconButton
-              size="small"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="black"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Toolbar>
-          {searchQuery && <RecipeReviewCard searchQuery={searchQuery} />}
-        </StyledAppBar>
-        {renderMobileMenu}
-        {renderMenu}
-      </Box>
-    </div>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Поиск…"
+              inputProps={{ "aria-label": "search" }}
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            {searchQuery && (
+              <IconButton
+                onClick={handleClearSearch}
+                sx={{
+                  padding: 0,
+                  position:"absolute",
+                  top:"14px",
+                  right:"9px"
+                }}
+              >
+                <img
+                  style={{
+                    width: "13px",
+                  }}
+                  src={close}
+                  alt="Очистить поиск"
+                />
+              </IconButton>
+            )}
+          </Search>
+          <IconButton
+            size="small"
+            edge="end"
+            aria-label="account of current user"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={handleProfileMenuOpen}
+            color="black"
+          >
+            <AccountCircle />
+          </IconButton>
+        </Toolbar>
+        {searchQuery && (
+          <div className="Header__search-results">
+            <RecipeReviewCard searchQuery={searchQuery} />
+          </div>
+        )}
+      </StyledAppBar>
+      {renderMobileMenu}
+      {renderMenu}
+    </Box>
   );
 });
 

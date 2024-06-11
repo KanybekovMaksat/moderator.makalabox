@@ -10,7 +10,14 @@
   white-space: nowrap;
   margin-right: 10px;
 }
-@media screen and (max-width: 490px) {
+.Header__search-results {
+
+  overflow-y: auto;
+  max-height: 90vh;
+
+}
+
+@media screen and (max-width: 566px) {
   .Header__h2 {
     display: none;
   }

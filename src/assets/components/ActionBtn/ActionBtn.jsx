@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -7,8 +8,26 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from '@mui/material/Alert';
 import ok from "../../images/task.png";
 import no from "../../images/no.png";
+
+const CustomSnackbar = ({ open, onClose, message, severity }) => {
+  return (
+    <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
+      <MuiAlert elevation={6} variant="filled" onClose={onClose} severity={severity}>
+        {message}
+      </MuiAlert>
+    </Snackbar>
+  );
+};
+
+CustomSnackbar.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  message: PropTypes.string.isRequired,
+  severity: PropTypes.oneOf(['error', 'warning', 'info', 'success']).isRequired
+};
 
 const ActionButtons = ({
   articleVisible,
@@ -25,7 +44,7 @@ const ActionButtons = ({
   handleReject,
   handleApprove,
   moderatorComment,
-  setModeratorComment 
+  setModeratorComment,
 }) => {
   return (
     <>
@@ -60,25 +79,23 @@ const ActionButtons = ({
         )}
       </div>
 
-      <Snackbar
-        anchorOrigin={snackbarAnchor}
+      <CustomSnackbar
         open={openSnackbar}
         onClose={handleCloseSnackbar}
-        autoHideDuration={4000}
-      >
-        <div className="Examination__message" style={{ color: messageColor }}>
-          <p>{messageText}</p>
-        </div>
-      </Snackbar>
+        message={messageText}
+        severity={messageColor === "red" ? "error" : "success"}
+      />
 
       <Dialog
         open={dialogOpen}
-        onClose={() => handleDialogClose(false)} 
+        onClose={() => handleDialogClose(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {confirmAction === "reject" ? "Отклонить статью?" : "Опубликовать статью?"}
+          {confirmAction === "reject"
+            ? "Отклонить статью?"
+            : "Опубликовать статью?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -94,8 +111,8 @@ const ActionButtons = ({
               label="Причина отклонения"
               type="text"
               fullWidth
-              value={moderatorComment} 
-              onChange={(e) => setModeratorComment(e.target.value)} 
+              value={moderatorComment}
+              onChange={(e) => setModeratorComment(e.target.value)}
             />
           )}
         </DialogContent>
@@ -125,8 +142,8 @@ ActionButtons.propTypes = {
   setConfirmAction: PropTypes.func.isRequired,
   dialogOpen: PropTypes.bool.isRequired,
   setDialogOpen: PropTypes.func.isRequired,
-  moderatorComment: PropTypes.string, 
-  setModeratorComment: PropTypes.func.isRequired, 
+  moderatorComment: PropTypes.string,
+  setModeratorComment: PropTypes.func.isRequired,
   handleDialogClose: PropTypes.func.isRequired,
   openSnackbar: PropTypes.bool.isRequired,
   snackbarAnchor: PropTypes.object, // изменено на необязательный
@@ -134,8 +151,7 @@ ActionButtons.propTypes = {
   messageText: PropTypes.string.isRequired,
   messageColor: PropTypes.string.isRequired,
   handleReject: PropTypes.func.isRequired,
-  handleApprove: PropTypes.func.isRequired
+  handleApprove: PropTypes.func.isRequired,
 };
-
 
 export default ActionButtons;

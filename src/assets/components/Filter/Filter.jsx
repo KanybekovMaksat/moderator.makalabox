@@ -30,7 +30,7 @@ const icons = [
   iconProgramming,
   icondevelopYourself,
   iconSport,
-]; 
+];
 
 export default function DrawerFilters({
   onCategoryChange,
@@ -110,10 +110,10 @@ export default function DrawerFilters({
   };
 
   const handleSave = () => {
-    if (onCategoryChange && typeof onCategoryChange === 'function') {
+    if (onCategoryChange && typeof onCategoryChange === "function") {
       onCategoryChange(selectedCategory ? [selectedCategory] : []);
     }
-    if (onOrganizationChange && typeof onOrganizationChange === 'function') {
+    if (onOrganizationChange && typeof onOrganizationChange === "function") {
       onOrganizationChange(selectedOrganization ? [selectedOrganization] : []);
     }
     setOpen(false);
@@ -177,7 +177,8 @@ export default function DrawerFilters({
                   display: "flex",
                   flexWrap: "wrap",
                   gap: "16px",
-                  justifyContent: "center", // Центрирование карточек по горизонтали
+                  justifyContent: "center",
+
                 }}
               >
                 {categories.map((category, index) => {
@@ -198,6 +199,9 @@ export default function DrawerFilters({
                         ...(selectedCategory === category.name && {
                           border: "2px solid black",
                         }),
+                        "@media (max-width: 465px)": {
+                          width: "300px", 
+                        },
                       }}
                       onClick={() => handleCardsClick(category.name)}
                     >
@@ -283,6 +287,9 @@ export default function DrawerFilters({
                         ...(selectedOrganization === organization.name && {
                           border: "2px solid black",
                         }),
+                        "@media (max-width: 465px)": {
+                          width: "300px", 
+                        },
                       }}
                       onClick={() => handleCardClick(organization.name)}
                     >
