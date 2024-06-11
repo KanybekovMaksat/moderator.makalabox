@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { Context } from "../../../main";
 import { observer } from "mobx-react-lite";
 import box from "../../images/box.png";
+import RecipeReviewCard from "../Published/Published";
 import close from "../../images/close.png";
 
 const Search = styled("div")(({ theme }) => ({
@@ -67,7 +68,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const PrimarySearchAppBar = observer(({ onSearch }) => {
+
+
+
+const PrimarySearchAppBar = observer(() => {
   const { store } = useContext(Context);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -93,12 +97,10 @@ const PrimarySearchAppBar = observer(({ onSearch }) => {
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    onSearch(query); // вызываем колбэк с текущим значением поиска
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    onSearch(""); // вызываем колбэк с пустой строкой для очистки результатов
   };
 
   const menuId = "primary-search-account-menu";
@@ -165,69 +167,70 @@ const PrimarySearchAppBar = observer(({ onSearch }) => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <StyledAppBar position="fixed">
-        <Toolbar>
-          <h2
-            className="Header__h2"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              columnGap: "8px",
-              color: "black",
-              fontSize: "28px",
-              whiteSpace: "nowrap",
-              marginRight: "10px",
-            }}
-          >
-            <img
-              style={{ width: "40px", marginBottom: "7px" }}
-              src={box}
-              alt=""
-            />
-            Makala Box
-          </h2>
-          <Box sx={{ flexGrow: 1.5 }} />
+      <Box sx={{ flexGrow: 1 }}>
+        <StyledAppBar position="fixed" >
+          <Toolbar>
+            <h2
+              className="Header__h2"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                columnGap: "8px",
+                color: "black",
+                fontSize: "28px",
+                whiteSpace: "nowrap",
+                marginRight:"10px"
+              }}
+            >
+              <img
+                style={{ width: "40px", marginBottom: "7px" }}
+                src={box}
+                alt=""
+              />
+              Makala Box
+            </h2>
+            <Box sx={{ flexGrow: 1.5 }} />
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Поиск…"
-              inputProps={{ "aria-label": "search" }}
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            {searchQuery && (
-              <IconButton
-                onClick={handleClearSearch}
-                sx={{ padding: 0, marginRight: 1 }}
-              >
-                <img
-                  style={{ width: "13px", margin: "0 0 2px 0" }}
-                  src={close}
-                  alt="Очистить поиск"
-                />
-              </IconButton>
-            )}
-          </Search>
-          <IconButton
-            size="small"
-            edge="end"
-            aria-label="account of current user"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="black"
-          >
-            <AccountCircle />
-          </IconButton>
-        </Toolbar>
-      </StyledAppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Поиск…"
+                inputProps={{ "aria-label": "search" }}
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              {searchQuery && (
+                <IconButton
+                  onClick={handleClearSearch}
+                  sx={{ padding: 0, marginRight: 1 }}
+                >
+                  <img
+                    style={{ width: "13px", margin: "0 0 2px 0" }}
+                    src={close}
+                    alt="Очистить поиск"
+                  />
+                </IconButton>
+              )}
+            </Search>
+            <IconButton
+              size="small"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="black"
+            >
+              <AccountCircle />
+            </IconButton>
+          </Toolbar>
+          {searchQuery && <RecipeReviewCard searchQuery={searchQuery} />}
+        </StyledAppBar>
+        {renderMobileMenu}
+        {renderMenu}
+      </Box>
   );
 });
 

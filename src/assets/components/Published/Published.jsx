@@ -13,9 +13,8 @@ import PropTypes from "prop-types";
 import Filter from "../Filter/Filter";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import Header from "../Header/Header"
 
-export default function Published({ searchQuery }) {
+export default function RecipeReviewCard({ searchQuery }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -89,7 +88,7 @@ export default function Published({ searchQuery }) {
             <Filter onCategoryChange={handleFilterChange} />
           </div>
         )}
-        <Published searchQuery={searchQuery} />
+
         <div className="flex__card">
           {isLoading
             ? Array.from({ length: 3 }).map((_, index) => (
@@ -111,9 +110,15 @@ export default function Published({ searchQuery }) {
                   <h2 className="Card__title">
                     {" "}
                     <Skeleton width={750} height={35} />
+
+
+
+
+
                     <Skeleton width={650} height={25} />
                     <Skeleton width={650} height={25} />
                   </h2>
+
 
                   <div className="Card__photo">
                     <Skeleton width={800} height={268} />
@@ -135,10 +140,7 @@ export default function Published({ searchQuery }) {
                     <h4>Организация</h4>
                     <div className="Card__org">
                       <ul>
-                        <li>
-                          {" "}
-                          <Skeleton width={90} height={20} />{" "}
-                        </li>
+                        <li> <Skeleton width={90} height={20}/> </li>
                       </ul>
                     </div>
                   </div>
@@ -221,6 +223,6 @@ export default function Published({ searchQuery }) {
   );
 }
 
-Published.propTypes = {
+RecipeReviewCard.propTypes = {
   searchQuery: PropTypes.string,
 };
