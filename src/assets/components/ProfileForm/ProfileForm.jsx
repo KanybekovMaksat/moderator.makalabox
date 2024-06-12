@@ -18,6 +18,7 @@ import person4 from "../../images/person4.png";
 import person5 from "../../images/person5.png";
 import person6 from "../../images/person6.png";
 import set from "../../images/settings.svg";
+import close from "../../images/close.png";
 
 const Alert = forwardRef((props, ref) => {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -304,6 +305,7 @@ const Personal = () => {
                   </button>
                   {openBtnModal && (
                     <div className="ProfileForm__set">
+                      <img onClick={handleBtn} style={{width:"14px", position:"absolute", right:"10px",top:"15px" }} src={close} alt="" />
                       <button
                         className="ProfileForm__reset"
                         type="button"

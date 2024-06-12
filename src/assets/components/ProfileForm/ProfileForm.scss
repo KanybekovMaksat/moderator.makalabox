@@ -262,6 +262,21 @@ $btnColor2: black;
       padding: 10px;
       margin-left: 100px;
     }
+    &__set{
+      position: absolute;
+      display: grid;
+      background: white;
+      padding: 30px;
+      border-radius: 30px;
+      margin-top: 10px;
+      left: 50px;
+
+      button{
+        margin-bottom: 10px;
+
+      }
+    }
+    
   }
 }
 @media screen and (max-width: 510px) {
