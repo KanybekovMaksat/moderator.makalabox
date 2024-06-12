@@ -1,7 +1,12 @@
-import { useState, useEffect, useRef, forwardRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
 import AvatarEditor from "react-avatar-editor";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 import avatar from "../../images/Profile-ava.png";
 import download from "../../images/download.png";
 import trash from "../../images/trash.png";
@@ -12,6 +17,7 @@ import person3 from "../../images/person3.png";
 import person4 from "../../images/person4.png";
 import person5 from "../../images/person5.png";
 import person6 from "../../images/person6.png";
+import set from "../../images/settings.svg";
 
 const Alert = forwardRef((props, ref) => {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -24,7 +30,6 @@ const Personal = () => {
   const [users, setUsers] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [scale, setScale] = useState(1);
-  const [rotate, setRotate] = useState(0); // добавили состояние для угла поворота
   const [isEditingFirstName, setIsEditingFirstName] = useState(false);
   const [isEditingLastName, setIsEditingLastName] = useState(false);
   const [isEditingNickname, setIsEditingNickname] = useState(false);
@@ -32,11 +37,13 @@ const Personal = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openEditSnackbar, setOpenEditSnackbar] = useState(false);
   const [openResetSnackbar, setOpenResetSnackbar] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openBtnModal, setOpenBtnModal] = useState(false);
   const editorRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = () => {
-    const newUser = { firstName, lastName, nickname, selectedImage, scale, rotate };
+    const newUser = { firstName, lastName, nickname, selectedImage, scale };
     setUsers([...users, newUser]);
     localStorage.setItem("firstName", firstName);
     localStorage.setItem("lastName", lastName);
@@ -44,9 +51,7 @@ const Personal = () => {
 
     if (selectedImage) {
       localStorage.setItem("selectedImage", selectedImage);
-      localStorage.setItem('scale', scale)
-      localStorage.setItem('rotate', rotate)
-      console.log("Setting rotate in localStorage:", rotate);
+      localStorage.setItem("scale", scale);
       console.log("Setting scale in localStorage:", scale);
     }
     setIsEditingFirstName(false);
@@ -66,7 +71,6 @@ const Personal = () => {
     setNickname("moderator");
     setSelectedImage(null);
     setScale(1);
-    setRotate(0); // сброс угла поворота при сбросе
   };
 
   useEffect(() => {
@@ -102,10 +106,6 @@ const Personal = () => {
     setScale(newScale);
   };
 
-  const handleRotateChange = (newRotate) => {
-    setRotate(newRotate);
-  };
-
   const handleAvatarSelect = (image) => {
     setSelectedImage(image);
     setIsSelectingAvatar(false);
@@ -125,11 +125,22 @@ const Personal = () => {
     setOpenSnackbar(false);
   };
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  const handleBtn = () => {
+    setOpenBtnModal(!openBtnModal);
+  };
+
   return (
     <>
       <main>
         <section className="ProfileForm__section">
-            <div className="ProfileForm__content">
+          <div className="ProfileForm__content">
             <div className="ProfileForm__flex">
               <div className="ProfileForm__avatar">
                 {isLoading ? (
@@ -155,41 +166,43 @@ const Personal = () => {
                 <div className="setting__form">
                   <div className="avatar__flex">
                     <div className="add__avatar">
-                      <label htmlFor="fileInput">
-                        <p>Добавить фото</p>
-                        <img src={download} alt="Download" />
-                      </label>
-                      <input
-                        id="fileInput"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        style={{ display: "none" }}
-                      />
+                      <button
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "6px 4px",
+                          columnGap: "8px",
+                          background: "none",
+                          borderRadius: "10px",
+                          border: "1px solid black",
+                        }}
+                        className="Profileform__add"
+                        onClick={handleOpenModal}
+                      >
+                        Добавить фото <img src={download} alt="Download" />
+                      </button>
                     </div>
                     <div className="remove__avatar">
-                      <p onClick={() => setSelectedImage(null)}>Удалить</p>
-                      <img src={trash} alt="Trash" />
+                      <button
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          padding: "6px 4px",
+                          columnGap: "8px",
+                          background: "none",
+                          borderRadius: "10px",
+                          border: "1px solid black",
+                        }}
+                        className="Profileform__remove"
+                        onClick={() => setSelectedImage(null)}
+                      >
+                        Удалить <img src={trash} alt="Trash" />
+                      </button>
                     </div>
                   </div>
 
-                  <div className="avatar__flex-one">
-                    <div className="add__avatar">
-                      <label htmlFor="fileInput">
-                        <p>Добавить фото</p>
-                      </label>
-                      <input
-                        id="fileInput"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        style={{ display: "none" }}
-                      />
-                    </div>
-                    <div className="remove__avatar">
-                      <p onClick={() => setSelectedImage(null)}>Удалить</p>
-                    </div>
-                  </div>
                   <div className="ProfileForm-scale">
                     <div
                       className="ProfileForm__scale"
@@ -218,53 +231,7 @@ const Personal = () => {
                         alignItems: "center",
                         columnGap: "10px",
                       }}
-                    >
-                      <label htmlFor="">Поворот</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="360"
-                        step="1"
-                        value={rotate}
-                        onChange={(e) =>
-                          handleRotateChange(parseFloat(e.target.value))
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div className="ProfileForm__select-avatar">
-                    <button
-                      style={{
-                        padding: "10px",
-                        background: "none",
-                        borderRadius: "15px",
-                        border: "1px solid black",
-                      }}
-                      onClick={() => setIsSelectingAvatar(!isSelectingAvatar)}
-                    >
-                      Выбрать аватар
-                    </button>
-                    {isSelectingAvatar && (
-                      <div className="avatar-selection">
-                        {[
-                          person1,
-                          person2,
-                          person3,
-                          person4,
-                          person5,
-                          person6,
-                        ].map((img, index) => (
-                          <img
-                            key={index}
-                            src={img}
-                            alt={`Person ${index + 1}`}
-                            onClick={() => handleAvatarSelect(img)}
-                            className="avatar-option"
-                          />
-                        ))}
-                      </div>
-                    )}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -272,7 +239,6 @@ const Personal = () => {
               <div className="ProfileForm__nick">
                 <form action="">
                   <div className="ProfileForm__surname">
-                    <label htmlFor="">Фамилия</label>
                     <div className="ProfileForm__input-container">
                       <input
                         type="text"
@@ -283,7 +249,6 @@ const Personal = () => {
                     </div>
                   </div>
                   <div className="ProfileForm__name">
-                    <label htmlFor="">Имя</label>
                     <div className="ProfileForm__input-container">
                       <input
                         type="text"
@@ -294,7 +259,6 @@ const Personal = () => {
                     </div>
                   </div>
                   <div className="ProfileForm__nickname">
-                    <label htmlFor="">Никнейм</label>
                     <div className="ProfileForm__input-container">
                       <input
                         type="text"
@@ -304,37 +268,71 @@ const Personal = () => {
                       />
                     </div>
                   </div>
-                  <div className="ProfileForm__btn">
-                    <button
-                      style={{}}
-                      className="ProfileForm__reset"
-                      type="button"
-                      onClick={handleButtonClickReset}
-                    >
-                      Сбросить
-                    </button>
-
-                    <button
-                      className="ProfileForm__saved"
-                      type="button"
-                      onClick={handleSave}
-                    >
-                      Сохранить
-                    </button>
-                    <button
-                      className="ProfileForm__edit"
-                      type="button"
-                      onClick={handleBtnEdit}
-                    >
-                      Редактировать
-                      <img src={edit} alt="" />
-                    </button>
-                  </div>
                 </form>
+                <div className="ProfileForm__btn">
+                  <button
+                    className="ProfileForm__reset"
+                    type="button"
+                    onClick={handleButtonClickReset}
+                  >
+                    Сбросить
+                  </button>
+
+                  <button
+                    className="ProfileForm__saved"
+                    type="button"
+                    onClick={handleSave}
+                  >
+                    Сохранить
+                  </button>
+                  <button
+                    className="ProfileForm__edit"
+                    type="button"
+                    onClick={handleBtnEdit}
+                  >
+                    Редактировать
+                    <img src={edit} alt="" />
+                  </button>
+                </div>
+                <div className="ProfileForm__btn-media">
+                  <button className="ProfileForm__settings"
+                    onClick={handleBtn}
+                    
+                  >
+                    Открыть настройки
+                    <img style={{width:"16px"}} src={set} alt="" />
+                  </button>
+                  {openBtnModal && (
+                    <div className="ProfileForm__set">
+                      <button
+                        className="ProfileForm__reset"
+                        type="button"
+                        onClick={handleButtonClickReset}
+                      >
+                        Сбросить
+                      </button>
+
+                      <button
+                        className="ProfileForm__saved"
+                        type="button"
+                        onClick={handleSave}
+                      >
+                        Сохранить
+                      </button>
+                      <button
+                        className="ProfileForm__edit"
+                        type="button"
+                        onClick={handleBtnEdit}
+                      >
+                        Редактировать
+                        <img src={edit} alt="" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            </div>
-
+          </div>
         </section>
       </main>
       <Snackbar
@@ -364,6 +362,54 @@ const Personal = () => {
           Ваши данные сброшены
         </Alert>
       </Snackbar>
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>Выберите фото</DialogTitle>
+        <DialogContent>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            <Button variant="outlined" component="label">
+              Загрузить из проводника
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                hidden
+              />
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => setIsSelectingAvatar(true)}
+            >
+              Выбрать аватар
+            </Button>
+            {isSelectingAvatar && (
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                {[person1, person2, person3, person4, person5, person6].map(
+                  (img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Person ${index + 1}`}
+                      onClick={() => handleAvatarSelect(img)}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        cursor: "pointer",
+                      }}
+                    />
+                  )
+                )}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Закрыть
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

@@ -3,7 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import user from "../../images/user (2).png";
 import HeaderNotSearch from "../HeaderNonSearch/HeaderNonSearch";
 import dayjs from "dayjs";
-import "./ExaminationArticle.scss";
+import clock from "../../images/clock.svg";
+import calendar from "../../images/calendar.png";
+
 import $api from "../../../http";
 import LoadingAnimation from "../Loading/Loading";
 import ArticleViewer from "../BlockNote/BlockNote";
@@ -49,8 +51,7 @@ const ExaminationArticle = () => {
   }, [id]);
 
   const handleApprove = async () => {
-    handleDialogClose()
-
+    handleDialogClose();
 
     try {
       await $api.patch(`articles/moderation/${id}/`, { status: "approved" });
@@ -63,7 +64,7 @@ const ExaminationArticle = () => {
   };
 
   const handleReject = async () => {
-    handleDialogClose()
+    handleDialogClose();
     try {
       await $api.patch(`articles/moderation/${id}/`, {
         status: "rejected",
@@ -83,9 +84,9 @@ const ExaminationArticle = () => {
   };
 
   const handleDialogClose = () => {
-    setDialogOpen(false)
-    setConfirmAction(null)
-  }
+    setDialogOpen(false);
+    setConfirmAction(null);
+  };
 
   const showMessage = (text, color) => {
     setMessageText(text);
@@ -127,9 +128,6 @@ const ExaminationArticle = () => {
           <section className="ExaminationArticle__section">
             <div className="container">
               <div className="ExaminationArticle__content">
-                {/* <div className="ExaminationArticle__photo">
-                  <img src={post.photo} alt="" />
-                </div> */}
                 <div className="ExaminationArticle__flex">
                   <div className="ExaminationArticle__avatar">
                     <img
@@ -141,42 +139,47 @@ const ExaminationArticle = () => {
                         borderRadius: "50%",
                       }}
                     />
-                    <div className="ExaminationArticle__author">
-                      <h3>{post.author.fullName}</h3>
-                      <p className="date__p">
-                        {dayjs(post.created)
-                          .locale("ru")
-                          .format("DD MMM, HH:MM, YYYY")}
-                      </p>
+                    <div className="ExaminationArticle__info">
+                      <div className="ExaminationArticle__author">
+                        <h3>{post.author.fullName}</h3>
+                      </div>
+                      <div className="ExaminationArticle__infoDate">
+                        <p className="date__p">
+                          <img src={calendar} alt="" />
+
+                          {dayjs(post.created)
+                            .locale("ru")
+                            .format("DD MMM/ HH:MM/ YYYY")}
+                        </p>
+                        <p className="ExaminationArticle__clock">
+                          <img src={clock} alt="" />
+                          {post.readTime} мин
+                        </p>
+                      </div>
                     </div>
+                  </div>
+                </div>{" "}
+                <div className="ExaminationArticle__organization">
+                  <h4>Организация</h4>
+                  <div className="ExaminationArticle__org">
+                    <ul>
+                      <li>{post.organization.name}</li>
+                    </ul>
                   </div>
                 </div>
-                  {" "}
-                  <div className="ExaminationArticle__organization">
-                    <h4>Организация</h4>
-                    <div className="ExaminationArticle__org">
-                      <ul>
-                        <li>{post.organization.name}</li>
-                      </ul>
-                    </div>
+                <div className="ExaminationArticle__category">
+                  <h4>Категории</h4>
+                  <div className="ExaminationArticle__categories">
+                    <ul>
+                      {post.categories &&
+                        post.categories.map((category, index) => (
+                          <li key={index}>{category}</li>
+                        ))}
+                    </ul>
                   </div>
-                  <div className="ExaminationArticle__category">
-                    <h4>Категории</h4>
-                    <div className="ExaminationArticle__categories">
-                      <ul>
-                        {post.categories &&
-                          post.categories.map((category, index) => (
-                            <li  key={index}>
-                              {category}
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                  </div>
-
+                </div>
                 <hr />
                 <h2 className="ExaminationArticle__title">{post.title}</h2>
-
                 <div className="ExaminationArticle__block">
                   {preLoad ? <ArticleViewer body={post.body} /> : null}
                 </div>

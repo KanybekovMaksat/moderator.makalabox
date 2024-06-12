@@ -3,10 +3,9 @@
     background: #009dff0e;
     padding-top: 100px;
   }
-  &__block{
+  &__block {
     margin: 0 30px;
   }
-
 
   &__photo {
     width: 100%;
@@ -22,12 +21,12 @@
   }
   &__title {
     font-family: Ubuntu;
-    font-size: 38px;
+    font-size: 33px;
     font-weight: 500;
     padding: 10px 0;
   }
-  &__author {
-    p{
+  &__info {
+    p {
       margin-top: 10px;
     }
   }
@@ -52,36 +51,48 @@
   &__category {
     font-size: 20px;
   }
-  &__categories li {
-    margin: 8px 0 10px 58px;
-    font-size: 17px;
-    font-weight: 500;
-    list-style: disk;
-    padding: 5px;
-    border-radius: 7px;
-    border: 2px solid rgb(10 133 209);
-    max-width: 250px;
+  &__categories {
+    ul {
+      color: black;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      column-gap: 45px;
+      padding-left: 60px;
+      margin: 5px 0;
+      flex-wrap: wrap;
 
+
+      li {
+        border: 1px solid rgb(76, 153, 203);
+        border-radius: 10px;
+        padding: 7px;
+        margin-bottom: 10px;
+      }
+    }
   }
 
   &__organization h4 {
     font-size: 20px;
     padding: 10px 0 0 0;
   }
-  &__org li {
-    margin: 5px 0 5px 58px;
-    font-size: 16px;
-    font-weight: 500;
-    list-style: disc;
-    padding: 5px;
-    border: 2px solid rgb(10 133 209);
-    border-radius: 7px;
-    max-width: 250px;
+  &__org {
+    ul {
+      color: black;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      column-gap: 45px;
+      padding-left: 60px;
+      margin: 5px 0;
 
-
-
+      li {
+        border: 1px solid rgb(76, 153, 203);
+        border-radius: 10px;
+        padding: 7px;
+      }
+    }
   }
-
   &__btn {
     display: flex;
     align-items: center;
@@ -89,7 +100,7 @@
     column-gap: 30px;
     padding: 50px;
   }
-  &__btn input{
+  &__btn input {
     width: 300px;
     padding: 10px 0;
     border-radius: 12px;
@@ -130,11 +141,42 @@
     color: lighten(white, 10%);
     cursor: pointer;
   }
+  &__infoDate {
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+  }
+  &__clock {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-family: Golos Text, sans;
+    font-weight: 400;
+    color: rgb(137 137 137);
+
+    img {
+      width: 20px;
+    }
+  }
 }
 
-.data__p {
-  color: #858080;
+.date__p {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  font-family: Golos Text, sans;
   font-weight: 400;
-  font-size: 16px;
-  margin-top: 5px;
+  color: rgb(137 137 137);
+}
+.date__p img {
+  width: 20px;
+}
+
+
+@media screen and (max-width:580px) {
+  .ExaminationArticle{
+    &__title{
+      font-size: 26px;
+    }
+  }
 }

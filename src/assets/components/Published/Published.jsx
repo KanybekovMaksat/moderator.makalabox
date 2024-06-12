@@ -6,7 +6,7 @@ import user from "../../images/user (2).png";
 import $api from "../../../http";
 import calendar from "../../images/calendar.png";
 import writer from "../../images/writer.png";
-import eye from "../../images/eye.svg";
+import clock from "../../images/clock.svg";
 import icon from "../../images/examinationIcon.png";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -20,6 +20,8 @@ export default function RecipeReviewCard({ searchQuery }) {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState([]);
+
   const { store } = useContext(Context);
   const navigate = useNavigate();
 
@@ -53,13 +55,15 @@ export default function RecipeReviewCard({ searchQuery }) {
       const lowercasedQuery = searchQuery.toLowerCase();
       filtered = filtered.filter((post) => {
         const titleMatch = post.title.toLowerCase().includes(lowercasedQuery);
-        const authorMatch = post.author.fullName
+        const authorMatch = post.author.fullName;
+        const orgMatch = post.organization.name
           .toLowerCase()
           .includes(lowercasedQuery);
         const categoryMatch = post.categories.some((category) =>
           category.toLowerCase().includes(lowercasedQuery)
         );
-        return titleMatch || authorMatch || categoryMatch;
+
+        return titleMatch || authorMatch || categoryMatch || orgMatch;
       });
     }
 
@@ -69,13 +73,18 @@ export default function RecipeReviewCard({ searchQuery }) {
           selectedCategories.includes(category)
         )
       );
+    } else if (selectedOrganization.length > 0) {
+      filtered = filtered.filter((post) =>
+        post.organization.some((org) => selectedOrganization.includes(org))
+      );
     }
 
     setFilteredPosts(filtered);
-  }, [searchQuery, posts, selectedCategories]);
+  }, [searchQuery, posts, selectedCategories, selectedOrganization]);
 
-  const handleFilterChange = (selectedCategories) => {
+  const handleFilterChange = (selectedCategories, setSelectedOrganization) => {
     setSelectedCategories(selectedCategories);
+    setSelectedOrganization(selectedOrganization);
   };
 
   return (
@@ -110,15 +119,9 @@ export default function RecipeReviewCard({ searchQuery }) {
                   <h2 className="Card__title">
                     {" "}
                     <Skeleton width={750} height={35} />
-
-
-
-
-
                     <Skeleton width={650} height={25} />
                     <Skeleton width={650} height={25} />
                   </h2>
-
 
                   <div className="Card__photo">
                     <Skeleton width={800} height={268} />
@@ -140,7 +143,10 @@ export default function RecipeReviewCard({ searchQuery }) {
                     <h4>Организация</h4>
                     <div className="Card__org">
                       <ul>
-                        <li> <Skeleton width={90} height={20}/> </li>
+                        <li>
+                          {" "}
+                          <Skeleton width={90} height={20} />{" "}
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -151,29 +157,32 @@ export default function RecipeReviewCard({ searchQuery }) {
               ))
             : filteredPosts.map((post, index) => (
                 <div className="Card__block" key={index}>
-                  <div className="Card__avatar">
-                    <img
-                      src={post.author.photo ? post.author.photo : user}
-                      alt="Author Avatar"
-                      style={{
-                        width: "2.5rem",
-                        height: "2.5rem",
-                        borderRadius: "50%",
-                      }}
-                    />
+                  <div className="Card__info">
                     <div className="Card__author">
+                      <img
+                        src={post.author.photo ? post.author.photo : user}
+                        alt="Author Avatar"
+                        style={{
+                          width: "2.5rem",
+                          height: "2.5rem",
+                          borderRadius: "50%",
+                        }}
+                      />
                       <p className="Card__writer">
                         <img src={writer} alt="" style={{ width: "25px" }} />
                         {post.author.fullName}
                       </p>
+                    </div>
+
+                    <div className="Card__infoDate">
                       <p className="Card__date">
                         <img src={calendar} alt="" />
                         {dayjs(post.created)
                           .locale("ru")
                           .format("DD MMM/ HH:MM/ YYYY")}
                       </p>
-                      <p className="Card__eye">
-                        <img src={eye} alt="" />
+                      <p className="Card__clock">
+                        <img src={clock} alt="" />
                         {post.readTime} мин
                       </p>
                     </div>

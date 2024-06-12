@@ -3,9 +3,8 @@ $btnColor2: black;
 .ProfileForm {
   &__section {
     padding: 60px 50px 0 50px;
-
   }
-  &__content{
+  &__content {
     background: #fff;
     border-radius: 30px;
   }
@@ -18,11 +17,11 @@ $btnColor2: black;
     align-items: center;
     justify-content: center;
     position: relative;
-
   }
   &__scale {
     margin-top: 10px;
   }
+
   // Остальные стили остаются без изменений
   &__flex {
     display: flex;
@@ -36,10 +35,10 @@ $btnColor2: black;
   &__name {
     margin: 16px 0;
   }
-
-
+  &__nick form {
+    margin-left: 50px;
+  }
   &__nick input {
-    flex: 1;
     width: 300px;
     height: 38px;
     padding-left: 12px;
@@ -78,21 +77,17 @@ $btnColor2: black;
     display: flex;
     margin-top: 30px;
     align-items: center;
-    justify-content: space-between;
+    column-gap: 20px;
   }
 
-  &__surname img {
-    position: absolute;
-    right: 15px;
-  }
-  &__edit{
+  &__edit {
     width: 128px;
     border-radius: 10px;
     height: 38px;
     display: flex;
     justify-content: center;
     align-items: center;
-    column-gap: 5px ;
+    column-gap: 5px;
     color: black;
     background: linear-gradient(
         to right,
@@ -129,14 +124,6 @@ $btnColor2: black;
       color: white;
     }
   }
-  &__name img {
-    position: absolute;
-    right: 15px;
-  }
-  &__nickname img {
-    position: absolute;
-    right: 15px;
-  }
 
   &__surname,
   &__name,
@@ -145,17 +132,10 @@ $btnColor2: black;
     display: flex;
     align-items: center;
     margin-bottom: 16px;
+  }
 
-    label {
-      margin-right: 12px;
-      width: 30%;
-    }
-    input {
-      position: relative;
-    }
-    &:not(:last-child) {
-      margin-right: 12px; 
-    }
+  &__btn-media {
+    display: none;
   }
 }
 .avatar__flex {
@@ -169,35 +149,10 @@ $btnColor2: black;
   text-align: left;
 }
 
-.avatar__flex {
-  display: flex;
-  align-items: center;
-  column-gap: 18px;
-  padding-top: 18px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 16.09px;
-  text-align: left;
-}
 .add__avatar {
   display: flex;
   align-items: center;
   column-gap: 8px;
-}
-.add__avatar label {
-  display: flex;
-  width: 100%;
-  column-gap: 10px;
-  cursor: pointer;
-}
-.remove__avatar {
-  display: flex;
-  align-items: center;
-  column-gap: 8px;
-  cursor: pointer;
-}
-.ProfileForm__select-avatar {
-  margin-top: 10px;
 }
 
 .avatar-selection {
@@ -271,47 +226,56 @@ $btnColor2: black;
 .avatar__flex-one {
   display: none;
 }
-@media screen and (max-width: 941px) {
-  .avatar__flex {
-    display: none;
-  }
-  .avatar__flex-one {
-    display: block;
-    display: flex;
-    column-gap: 30px;
-    margin-top: 20px;
-  }
-}
 
-@media screen and (max-width: 839px) {
-  .Card{
-    &__block{
-      justify-content: center;
-    }
-  }
-  .flex__card{
-    justify-content: center;
-
-  }
-}
-
-@media screen and (max-width: 745px) {
-  .ProfileForm{
-    &__flex{
-      display: grid;
-      justify-content: center;
-    }
-    &__avatar{
+@media screen and (max-width: 814px) {
+  .ProfileForm {
+    &__avatar {
       display: flex;
       align-items: center;
       column-gap: 30px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
-    &-scale{
+    &-scale {
       margin: 20px 0;
     }
   }
-
-  
 }
 
+@media screen and (max-width: 562px) {
+  .ProfileForm {
+    &__btn {
+      display: none;
+    }
+    &__btn-media {
+      display: block;
+    }
+    &__settings {
+      background: none;
+      border: 1px solid black;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      column-gap: 8px;
+      padding: 10px;
+      margin-left: 100px;
+    }
+  }
+}
+@media screen and (max-width: 510px) {
+  .ProfileForm {
+    &__nick input {
+      width: 200px;
+      height: 38px;
+    }
+    &__nick form{
+      margin: 0;
+    }
+    &__settings {
 
+      margin-left: 20px;
+    }
+  }
+}

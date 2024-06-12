@@ -31,7 +31,7 @@
   // }
   &__block {
     padding: 30px;
-    width: 865px;
+    max-width: 865px;
     height: 400px;
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -48,8 +48,12 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     transform: scale(1.03);
   }
-
-  &__author {
+  &__author{
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+  }
+  &__infoDate {
     display: flex;
     align-items: center;
     column-gap: 20px;
@@ -60,7 +64,7 @@
     }
   }
 
-  &__avatar {
+  &__info {
     display: flex;
     align-items: center;
     column-gap: 18px;
@@ -72,16 +76,16 @@
     margin-top: 21.21px;
   }
   &__subtitle {
-    margin-top: 1.5rem;
+    margin-top: 0.5rem;
     color: rgba(0, 0, 0, 0.87);
     font-size: 19px;
-    font-family: 500;
+    font-weight: 400;
   }
 
   &__photo {
     img {
       margin-top: 15px;
-      width: 800px;
+      width: 100%;
       height: 400px;
       object-fit: cover;
       background-attachment: fixed;
@@ -196,7 +200,7 @@
   &__date img {
     width: 20px;
   }
-  &__eye {
+  &__clock {
     display: flex;
     align-items: center;
     column-gap: 10px;
@@ -209,23 +213,56 @@
     }
   }
 }
-
-@media screen and (max-width: 667px) {
-  .Filter__content h2 {
-    font-size: 28px;
-  }
-}
-
-@media screen and (max-width: 1227px) {
-  .flex__card {
+@media screen and (max-width:900px) {
+  .Card__categories ul{
     flex-wrap: wrap;
-    max-width: 1094px;
-    justify-content: space-evenly;
-    align-items: center;
+
+  }
+  .Card__categories li {
+    margin-bottom: 10px;
+
+  }
+  .Card__organization h4{
+    margin-top:0 ;
   }
 }
-@media screen and (max-width: 850px) {
-  .flex__card {
-    max-width: 716px;
+@media screen and (max-width:766px) {
+  .Card__info{
+    flex-wrap: wrap;
+  }
+  .Card__infoDate{
+    margin-top: 10px;
+    margin-left: 5px;
+  }
+  .Filter__content h2 {
+    font-size: 33px;
   }
 }
+
+@media screen and (max-width: 688px) {
+  .Filter__content h2 {
+    font-size: 25px;
+  }
+  .Filter__content{
+    padding: 40px 0 20px;
+
+  }
+}
+@media screen and (max-width: 580px) {
+  .Card__title{
+    font-size: 25px;
+  }
+}
+
+@media screen and (max-width: 442px) {
+  .Filter__content h2{
+    font-size: 20px;
+  }
+}
+@media screen and (max-width: 482px) {
+.Card__infoDate {
+  font-size: .875rem
+}
+}
+
+

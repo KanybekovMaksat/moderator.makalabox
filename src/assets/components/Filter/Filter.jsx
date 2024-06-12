@@ -127,7 +127,8 @@ export default function DrawerFilters({
         startDecorator={<TuneIcon />}
         onClick={() => setOpen(true)}
         sx={{
-          "@media (max-width: 546px)": {
+          background:"white",
+          "@media (max-width: 608px)": {
             "& .button-text": {
               display: "none",
             },
