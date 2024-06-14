@@ -15,26 +15,19 @@ import { observer } from "mobx-react-lite";
 import box from "../../images/box.png";
 import RecipeReviewCard from "../Published/Published";
 import close from "../../images/close.png";
-
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
   border: "1px solid black",
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.common.black, 0.1),
   },
-  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-  [theme.breakpoints.down("xs")]: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "50%",
+    width: "auto",
   },
 }));
 
@@ -49,27 +42,28 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   color: "black",
 }));
 
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "black",
+  width: "100%",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
+
 const StyledAppBar = styled(AppBar)(() => ({
   backgroundColor: "white",
   boxShadow:
     "0px 2px 4px -1px rgba(0,0,0,0.1), 0px 4px 5px 0px rgba(0,0,0,0.05), 0px 1px 10px 0px rgba(0,0,0,0.12)",
 }));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "black",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
-
-
 
 const PrimarySearchAppBar = observer(() => {
   const { store } = useContext(Context);
@@ -167,70 +161,60 @@ const PrimarySearchAppBar = observer(() => {
   );
 
   return (
-      <Box sx={{ flexGrow: 1 }}>
-        <StyledAppBar position="fixed" >
-          <Toolbar>
-            <h2
-              className="Header__h2"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                columnGap: "8px",
-                color: "black",
-                fontSize: "28px",
-                whiteSpace: "nowrap",
-                marginRight:"10px"
-              }}
-            >
-              <img
-                style={{ width: "40px", marginBottom: "7px" }}
-                src={box}
-                alt=""
-              />
-              Makala Box
-            </h2>
-            <Box sx={{ flexGrow: 1.5 }} />
+    <Box sx={{ flexGrow: 1 }}>
+      <StyledAppBar position="fixed">
+        <Toolbar>
+          <h2
+            className="Header__h2"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              columnGap: "8px",
+              color: "black",
+              fontSize: "28px",
+              whiteSpace: "nowrap",
+              marginRight: "10px",
+            }}
+          >
+            <img
+              style={{ width: "40px", marginBottom: "7px" }}
+              src={box}
+              alt=""
+            />
+            Makala Box
+          </h2>
+          <Box sx={{ flexGrow: 1.5 }} />
 
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Поиск…"
-                inputProps={{ "aria-label": "search" }}
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              {searchQuery && (
-                <IconButton
-                  onClick={handleClearSearch}
-                  sx={{ padding: 0, marginRight: 1 }}
-                >
-                  <img
-                    style={{ width: "13px", margin: "0 0 2px 0" }}
-                    src={close}
-                    alt="Очистить поиск"
-                  />
-                </IconButton>
-              )}
-            </Search>
-            <IconButton
-              size="small"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Поиск…"
+              inputProps={{ "aria-label": "search" }}
+              value={searchQuery}
+              onChange={handleSearchChange}
               color="black"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Toolbar>
-          {searchQuery && <RecipeReviewCard searchQuery={searchQuery} />}
-        </StyledAppBar>
-        {renderMobileMenu}
-        {renderMenu}
-      </Box>
+            />
+
+          </Search>
+          <IconButton
+            size="small"
+            edge="end"
+            aria-label="account of current user"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={handleProfileMenuOpen}
+            color="black"
+          >
+            <AccountCircle />
+          </IconButton>
+        </Toolbar>
+        {searchQuery && <RecipeReviewCard searchQuery={searchQuery} />}
+      </StyledAppBar>
+      {renderMobileMenu}
+      {renderMenu}
+    </Box>
   );
 });
 

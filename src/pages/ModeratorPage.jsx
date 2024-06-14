@@ -59,7 +59,7 @@ const ModeratorPage = () => {
 
   return (
     <>
-      <div style={{ background: "#009dff0e" }}>
+      <div style={{ background: "#009dff0e",  }}>
         {isLoading ? (
           <LoadingAnimation />
         ) : error ? (

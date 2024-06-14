@@ -19,7 +19,7 @@ import iconDesign from "../../images/web-design.png";
 import iconMarketing from "../../images/marketing.png";
 import iconLeader from "../../images/leader.png";
 import iconProgramming from "../../images/programming.png";
-import icondevelopYourself from "../../images/developYourself.png";
+import iconDevelopYourself from "../../images/developYourself.png";
 import iconSport from "../../images/sport.png";
 import $api from "../../../http";
 
@@ -28,9 +28,13 @@ const icons = [
   iconMarketing,
   iconLeader,
   iconProgramming,
-  icondevelopYourself,
+  iconDevelopYourself,
   iconSport,
 ];
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function DrawerFilters({
   onCategoryChange,
@@ -127,7 +131,7 @@ export default function DrawerFilters({
         startDecorator={<TuneIcon />}
         onClick={() => setOpen(true)}
         sx={{
-          background:"white",
+          background: "white",
           "@media (max-width: 608px)": {
             "& .button-text": {
               display: "none",
@@ -179,7 +183,6 @@ export default function DrawerFilters({
                   flexWrap: "wrap",
                   gap: "16px",
                   justifyContent: "center",
-
                 }}
               >
                 {categories.map((category, index) => {
@@ -201,7 +204,7 @@ export default function DrawerFilters({
                           border: "2px solid black",
                         }),
                         "@media (max-width: 465px)": {
-                          width: "300px", 
+                          width: "300px",
                         },
                       }}
                       onClick={() => handleCardsClick(category.name)}
@@ -270,7 +273,7 @@ export default function DrawerFilters({
                   display: "flex",
                   flexWrap: "wrap",
                   gap: "16px",
-                  justifyContent: "center", // Центрирование карточек по горизонтали
+                  justifyContent: "center",
                 }}
               >
                 {organizations.map((organization) => {
@@ -289,14 +292,13 @@ export default function DrawerFilters({
                           border: "2px solid black",
                         }),
                         "@media (max-width: 465px)": {
-                          width: "300px", 
+                          width: "300px",
                         },
                       }}
                       onClick={() => handleCardClick(organization.name)}
                     >
                       <CardContent>
                         <Box
-                          pointer=""
                           display="flex"
                           flexDirection="column"
                           alignItems="center"
@@ -314,7 +316,7 @@ export default function DrawerFilters({
                           />
                           <Typography
                             level="title-md"
-                            sx={{ wordWrap: "break" }}
+                            sx={{ wordWrap: "break-word" }}
                           >
                             {organization.name}
                           </Typography>
@@ -347,13 +349,9 @@ export default function DrawerFilters({
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
       >
-        <MuiAlert
-          onClose={handleSnackbarClose}
-          severity="warning"
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: "100%" }}>
           Можно выбрать не более одной категории или одной организации!
-        </MuiAlert>
+        </Alert>
       </Snackbar>
     </React.Fragment>
   );
