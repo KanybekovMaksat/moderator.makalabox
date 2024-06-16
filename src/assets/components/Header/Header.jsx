@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -12,16 +12,18 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
 import { Context } from "../../../main";
 import { observer } from "mobx-react-lite";
-import box from "../../images/box.png";
-import RecipeReviewCard from "../Published/Published";
-import close from "../../images/close.png";
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+import boxImage from "../../images/box.png";
+import Published from "../Published/Published";
+import Filter from "../Filter/Filter"; // Подставьте свой путь до компонента Filter
+
+// Custom styled components
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
   border: "1px solid black",
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.black, 0.1),
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    border: "1px solid black"
   },
   marginLeft: 0,
   width: "100%",
@@ -47,7 +49,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
@@ -65,15 +66,46 @@ const StyledAppBar = styled(AppBar)(() => ({
     "0px 2px 4px -1px rgba(0,0,0,0.1), 0px 4px 5px 0px rgba(0,0,0,0.05), 0px 1px 10px 0px rgba(0,0,0,0.12)",
 }));
 
+const Overlay = styled("div")(({ theme }) => ({
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: alpha(theme.palette.common.black, 0.5),
+  zIndex: 1,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+}));
+
+const SearchResultsContainer = styled("div")(({ theme }) => ({
+  position: "relative",
+  backgroundColor: "white",
+  padding: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[5],
+  zIndex: 2,
+  width: "100%",
+  maxWidth: "100%",
+  maxHeight: "100%",
+  overflowY: "auto"
+}));
+
+// PrimarySearchAppBar component
 const PrimarySearchAppBar = observer(() => {
   const { store } = useContext(Context);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    handleFilterChange(selectedCategories);
+  }, [selectedCategories]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -89,12 +121,15 @@ const PrimarySearchAppBar = observer(() => {
   };
 
   const handleSearchChange = (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
+    setSearchQuery(event.target.value);
   };
 
-  const handleClearSearch = () => {
-    setSearchQuery("");
+  const handleCategoryChange = (categories) => {
+    setSelectedCategories(categories);
+  };
+
+  const handleFilterChange = (selectedCategories) => {
+    setSelectedCategories(selectedCategories);
   };
 
   const menuId = "primary-search-account-menu";
@@ -144,7 +179,6 @@ const PrimarySearchAppBar = observer(() => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem></MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -178,13 +212,12 @@ const PrimarySearchAppBar = observer(() => {
           >
             <img
               style={{ width: "40px", marginBottom: "7px" }}
-              src={box}
-              alt=""
+              src={boxImage}
+              alt="Makala Box"
             />
             Makala Box
           </h2>
           <Box sx={{ flexGrow: 1.5 }} />
-
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -196,7 +229,6 @@ const PrimarySearchAppBar = observer(() => {
               onChange={handleSearchChange}
               color="black"
             />
-
           </Search>
           <IconButton
             size="small"
@@ -210,8 +242,18 @@ const PrimarySearchAppBar = observer(() => {
             <AccountCircle />
           </IconButton>
         </Toolbar>
-        {searchQuery && <RecipeReviewCard searchQuery={searchQuery} />}
       </StyledAppBar>
+      {searchQuery && (
+        <Overlay>
+          <SearchResultsContainer>
+            <Published
+              searchQuery={searchQuery}
+              selectedCategories={selectedCategories}
+            />
+          </SearchResultsContainer>
+        </Overlay>
+      )}
+      <Filter onCategoryChange={handleCategoryChange} />
       {renderMobileMenu}
       {renderMenu}
     </Box>

@@ -1,59 +1,66 @@
-import React from "react";
-import Box from "@mui/joy/Box";
-import Drawer from "@mui/joy/Drawer";
-import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import DialogTitle from "@mui/joy/DialogTitle";
-import DialogContent from "@mui/joy/DialogContent";
-import ModalClose from "@mui/joy/ModalClose";
-import Divider from "@mui/joy/Divider";
-import Typography from "@mui/joy/Typography";
+import React, { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
 import TuneIcon from "@mui/icons-material/TuneRounded";
-import Stack from "@mui/joy/Stack";
-import Checkbox from "@mui/joy/Checkbox";
-import Sheet from "@mui/joy/Sheet";
+import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import iconDesign from "../../images/web-design.png";
-import iconMarketing from "../../images/marketing.png";
-import iconLeader from "../../images/leader.png";
-import iconProgramming from "../../images/programming.png";
-import iconDevelopYourself from "../../images/developYourself.png";
-import iconSport from "../../images/sport.png";
+import { DialogTitle } from "@mui/material";
 import $api from "../../../http";
-
-const icons = [
-  iconDesign,
-  iconMarketing,
-  iconLeader,
-  iconProgramming,
-  iconDevelopYourself,
-  iconSport,
-];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function DrawerFilters({
-  onCategoryChange,
-  onOrganizationChange,
-}) {
-  const [open, setOpen] = React.useState(false);
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
-  const [selectedOrganization, setSelectedOrganization] = React.useState(null);
-  const [categories, setCategories] = React.useState([]);
-  const [organizations, setOrganizations] = React.useState([]);
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [categoryLocked, setCategoryLocked] = React.useState(false);
-  const [organizationLocked, setOrganizationLocked] = React.useState(false);
+const CheckboxCustom = ({ checked }) => {
+  return (
+    <div
+      style={{
+        width: 20,
+        height: 20,
+        borderRadius: 4,
+        border: "1px solid #999",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        backgroundColor: checked ? "#2196f3" : "transparent",
+        transition: "background-color 0.3s ease",
+      }}
+    >
+      {checked && (
+        <svg
+          width="12"
+          height="10"
+          viewBox="0 0 12 10"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10.556 0.982913C10.1673 0.592918 9.53469 0.592918 9.14598 0.982913L3.73399 6.39491L2.85498 5.51592C2.46597 5.12691 1.83395 5.12691 1.44494 5.51592C1.05593 5.90493 1.05593 6.53787 1.44494 6.92688L3.05998 8.54192C3.44899 8.93093 4.08198 8.93093 4.47099 8.54192L10.556 2.45691C10.945 2.0679 10.945 1.43494 10.556 0.982913Z"
+            fill="white"
+          />
+        </svg>
+      )}
+    </div>
+  );
+};
 
-  React.useEffect(() => {
+const DrawerFilters = ({ onCategoryChange, onOrganizationChange }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [organizations, setOrganizations] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await $api.get("articles/categories/");
-        console.log("Полученные категории:", response.data);
         setCategories(response.data);
       } catch (error) {
         console.error("Ошибка при получении категорий:", error);
@@ -63,296 +70,195 @@ export default function DrawerFilters({
     fetchCategories();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchOrganizations = async () => {
       try {
         const response = await $api.get("articles/organizations/");
-        console.log("Получение организации:", response.data);
         setOrganizations(response.data);
-      } catch (e) {
-        console.error(e);
+      } catch (error) {
+        console.error("Ошибка при получении организаций:", error);
       }
     };
 
     fetchOrganizations();
   }, []);
 
-  const handleCardsClick = (itemName) => {
-    if (categoryLocked && selectedCategory !== itemName) {
-      setSnackbarOpen(true);
-      return;
+  const handleCategoryClick = (category) => {
+    const currentIndex = selectedCategory.indexOf(category);
+    const newSelected = [...selectedCategory];
+
+    if (currentIndex === -1) {
+      newSelected.push(category);
+    } else {
+      newSelected.splice(currentIndex, 1);
     }
-    const updatedCategory = selectedCategory === itemName ? null : itemName;
-    setSelectedCategory(updatedCategory);
-    setCategoryLocked(!!updatedCategory);
+
+    setSelectedCategory(newSelected);
   };
 
-  const handleCardClick = (itemName) => {
-    if (organizationLocked && selectedOrganization !== itemName) {
-      setSnackbarOpen(true);
-      return;
+  const handleOrganizationClick = (organization) => {
+    const currentIndex = selectedOrganization.indexOf(organization);
+    const newSelected = [...selectedOrganization];
+
+    if (currentIndex === -1) {
+      newSelected.push(organization);
+    } else {
+      newSelected.splice(currentIndex, 1);
     }
-    const updatedOrganization =
-      selectedOrganization === itemName ? null : itemName;
-    setSelectedOrganization(updatedOrganization);
-    setOrganizationLocked(!!updatedOrganization);
+
+    setSelectedOrganization(newSelected);
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  const getCategoryIndex = (categoryName) => {
-    return selectedCategory === categoryName ? 1 : 0;
-  };
-
   const handleReset = () => {
-    setSelectedCategory(null);
-    setSelectedOrganization(null);
-    setCategoryLocked(false);
-    setOrganizationLocked(false);
+    setSelectedCategory([]);
+    setSelectedOrganization([]);
   };
 
   const handleSave = () => {
     if (onCategoryChange && typeof onCategoryChange === "function") {
-      onCategoryChange(selectedCategory ? [selectedCategory] : []);
+      onCategoryChange(selectedCategory);
     }
     if (onOrganizationChange && typeof onOrganizationChange === "function") {
-      onOrganizationChange(selectedOrganization ? [selectedOrganization] : []);
+      onOrganizationChange(selectedOrganization);
     }
     setOpen(false);
+    setSnackbarOpen(true);
+  };
+
+  const renderCategories = (categories, nested = false) => {
+    return categories.map((category) => (
+      <React.Fragment key={category.id}>
+        <Card
+          sx={{
+            width: "100%",
+            borderRadius: 5,
+            border: selectedCategory.includes(category)
+              ? "2px solid black"
+              : "1px solid #e0e0e0",
+            "&:hover": {
+              boxShadow: "0px 0px 10px 5px #00000054",
+            },
+            cursor: "pointer",
+            transition: "box-shadow 0.3s ease",
+            marginBottom: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "8px 10px",
+            position: "relative",
+            "@media (max-width: 465px)": {
+              width: "300px",
+            },
+          }}
+          onClick={() => handleCategoryClick(category)}
+        >
+          <Typography variant="body1" gutterBottom>
+            {category.name}
+          </Typography>
+          <CheckboxCustom checked={selectedCategory.includes(category)} />
+        </Card>
+        {selectedCategory.includes(category) && category.children && (
+          <Box sx={{ pl: 2 }}>{renderCategories(category.children, true)}</Box>
+        )}
+      </React.Fragment>
+    ));
+  };
+
+  const renderOrganizations = (organizations = []) => {
+    return organizations.map((organization) => (
+      <Card
+        key={organization.id}
+        sx={{
+          cursor: "pointer",
+          border: selectedOrganization.includes(organization.name)
+            ? "1px solid black"
+            : "1px solid #e0e0e0",
+          "&:hover": {
+            boxShadow: "0px 0px 10px 5px #00000054",
+          },
+          borderRadius: 5,
+          marginBottom: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "8px 10px",
+          position: "relative",
+          "@media (max-width: 465px)": {
+            width: "300px",
+          },
+        }}
+        onClick={() => handleOrganizationClick(organization.name)}
+      >
+        <Typography variant="body1" gutterBottom>
+          {organization.name}
+        </Typography>
+        <CheckboxCustom
+          checked={selectedOrganization.includes(organization.name)}
+        />
+      </Card>
+    ));
   };
 
   return (
     <React.Fragment>
       <Button
         variant="outlined"
-        color="neutral"
-        startDecorator={<TuneIcon />}
+        color="primary"
+        startIcon={<TuneIcon />}
         onClick={() => setOpen(true)}
-        sx={{
-          background: "white",
-          "@media (max-width: 608px)": {
-            "& .button-text": {
-              display: "none",
-            },
-          },
-        }}
+        sx={{ marginBottom: 2 }}
       >
-        <span className="button-text">Фильтрация</span>
+        Фильтры
       </Button>
-      <Drawer
-        size="md"
-        variant="plain"
-        open={open}
-        onClose={() => setOpen(false)}
-        slotProps={{
-          content: {
-            sx: {
-              bgcolor: "transparent",
-              p: { md: 3, sm: 0 },
-              boxShadow: "none",
-              width: "80vw",
-              maxWidth: "600px",
-            },
-          },
-        }}
-      >
-        <Sheet
+      <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+        <Box
           sx={{
-            borderRadius: "md",
-            p: 2,
+            width: 370,
+            padding: 1,
+            height: "100%",
             display: "flex",
             flexDirection: "column",
-            gap: 2,
-            height: "100%",
-            overflow: "auto",
           }}
         >
-          <DialogTitle>Фильтрация</DialogTitle>
-          <ModalClose />
-          <Divider sx={{ mt: "auto" }} />
-          <DialogContent sx={{ gap: 2 }}>
-            <Typography sx={{ typography: "title-md", fontWeight: "bold" }}>
-              Категории
-            </Typography>
-            <Stack spacing={1.5}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "16px",
-                  justifyContent: "center",
-                }}
-              >
-                {categories.map((category, index) => {
-                  const icon = icons[index % icons.length];
-                  const categoryIndex = getCategoryIndex(category.name);
-                  return (
-                    <Card
-                      key={category.id}
-                      sx={{
-                        width: "calc(40% - 8px)", // Adjust the width to fit within the flex container
-                        boxShadow: "none",
-                        borderRadius: 16,
-                        cursor: "pointer", // Добавляем cursor: pointer
-                        position: "relative",
-                        "&:hover": {
-                          boxShadow: "0px 0px 10px 5px #00000054",
-                        },
-                        ...(selectedCategory === category.name && {
-                          border: "2px solid black",
-                        }),
-                        "@media (max-width: 465px)": {
-                          width: "300px",
-                        },
-                      }}
-                      onClick={() => handleCardsClick(category.name)}
-                    >
-                      <CardContent>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          justifyContent="center"
-                          alignItems="center"
-                          textAlign="center"
-                        >
-                          <img
-                            src={icon}
-                            alt={category.name}
-                            style={{
-                              width: 48,
-                              height: 48,
-                              marginBottom: 8,
-                            }}
-                          />
-                          {categoryIndex > 0 && (
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: 8,
-                                right: 8,
-                                backgroundColor: "black",
-                                color: "white",
-                                borderRadius: "50%",
-                                width: 24,
-                                height: 24,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              {categoryIndex}
-                            </Box>
-                          )}
-                          <Typography
-                            level="title-md"
-                            sx={{ wordWrap: "break-word" }}
-                          >
-                            {category.name}
-                          </Typography>
-                          <Checkbox
-                            checked={selectedCategory === category.name}
-                            sx={{ display: "none" }}
-                          />
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </Box>
-              <div
-                className="line"
-                style={{ width: "100%", height: "1px", background: "black" }}
-              ></div>
-              <Typography sx={{ typography: "title-md", fontWeight: "bold" }}>
-                Организация
+          <DialogTitle>
+            Фильтры
+            <Button onClick={() => setOpen(false)}>
+              <Typography variant="body1" color="inherit">
+                Закрыть
               </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "16px",
-                  justifyContent: "center",
-                }}
-              >
-                {organizations.map((organization) => {
-                  return (
-                    <Card
-                      key={organization.id}
-                      sx={{
-                        width: "calc(40% - 8px)", // Adjust the width to fit within the flex container
-                        boxShadow: "none",
-                        borderRadius: 16,
-                        cursor: "pointer",
-                        "&:hover": {
-                          boxShadow: "0px 0px 10px 5px #00000054",
-                        },
-                        ...(selectedOrganization === organization.name && {
-                          border: "2px solid black",
-                        }),
-                        "@media (max-width: 465px)": {
-                          width: "300px",
-                        },
-                      }}
-                      onClick={() => handleCardClick(organization.name)}
-                    >
-                      <CardContent>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="center"
-                          justifyContent="center"
-                          textAlign="center"
-                        >
-                          <img
-                            src={organization.photo}
-                            alt={organization.name}
-                            style={{
-                              width: 48,
-                              height: 48,
-                              marginBottom: 8,
-                            }}
-                          />
-                          <Typography
-                            level="title-md"
-                            sx={{ wordWrap: "break-word" }}
-                          >
-                            {organization.name}
-                          </Typography>
-                          <Checkbox
-                            checked={selectedOrganization === organization.name}
-                            sx={{ display: "none" }}
-                          />
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </Box>
-            </Stack>
-          </DialogContent>
-          <Divider sx={{ mt: "auto" }} />
-          <Stack
-            justifyContent="space-between"
-            display="flex"
-            useFlexGap
-            spacing={1}
-          >
-            <Button onClick={handleReset}>Сбросить</Button>
-            <Button onClick={handleSave}>Сохранить</Button>
+            </Button>
+          </DialogTitle>
+          <Stack spacing={2} sx={{ mt: 2 }}>
+            <Typography variant="h6">Категории</Typography>
+            {renderCategories(categories)}
           </Stack>
-        </Sheet>
+          <Stack spacing={2} sx={{ mt: 2 }}>
+            <Typography variant="h6">Организации</Typography>
+            {renderOrganizations(organizations)}
+          </Stack>
+          <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
+            <Button onClick={handleReset}>Сбросить</Button>
+            <Button variant="contained" onClick={handleSave}>
+              Применить
+            </Button>
+          </Box>
+        </Box>
       </Drawer>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
       >
-        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: "100%" }}>
-          Можно выбрать не более одной категории или одной организации!
+        <Alert onClose={handleSnackbarClose} severity="info">
+          Фильтры успешно применены!
         </Alert>
       </Snackbar>
     </React.Fragment>
   );
-}
+};
+
+export default DrawerFilters;
