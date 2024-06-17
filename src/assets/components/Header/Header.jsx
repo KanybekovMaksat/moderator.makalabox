@@ -200,6 +200,17 @@ const PrimarySearchAppBar = observer(() => {
         <Toolbar>
           <h2
             className="Header__h2"
+
+          >
+            <img
+              style={{ width: "40px", marginBottom: "7px" }}
+              src={boxImage}
+              alt="Makala Box"
+            />
+            Makala Box
+          </h2>
+          <h2
+            className="Header__h2-media"
             style={{
               display: "flex",
               alignItems: "center",
@@ -215,7 +226,6 @@ const PrimarySearchAppBar = observer(() => {
               src={boxImage}
               alt="Makala Box"
             />
-            Makala Box
           </h2>
           <Box sx={{ flexGrow: 1.5 }} />
           <Search>

@@ -41,13 +41,11 @@ export default function DrawerFilters({
   onOrganizationChange,
 }) {
   const [open, setOpen] = React.useState(false);
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [selectedCategory, setSelectedCategory] = React.useState([]);
   const [selectedOrganization, setSelectedOrganization] = React.useState(null);
   const [categories, setCategories] = React.useState([]);
   const [organizations, setOrganizations] = React.useState([]);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [categoryLocked, setCategoryLocked] = React.useState(false);
-  const [organizationLocked, setOrganizationLocked] = React.useState(false);
 
   React.useEffect(() => {
     const fetchCategories = async () => {
@@ -78,44 +76,31 @@ export default function DrawerFilters({
   }, []);
 
   const handleCardsClick = (itemName) => {
-    if (categoryLocked && selectedCategory !== itemName) {
-      setSnackbarOpen(true);
-      return;
+    const isSelected = selectedCategory.includes(itemName);
+
+    if (isSelected) {
+      setSelectedCategory(selectedCategory.filter((item) => item !== itemName));
+    } else {
+      setSelectedCategory([...selectedCategory, itemName]);
     }
-    const updatedCategory = selectedCategory === itemName ? null : itemName;
-    setSelectedCategory(updatedCategory);
-    setCategoryLocked(!!updatedCategory);
   };
 
   const handleCardClick = (itemName) => {
-    if (organizationLocked && selectedOrganization !== itemName) {
-      setSnackbarOpen(true);
-      return;
-    }
-    const updatedOrganization =
-      selectedOrganization === itemName ? null : itemName;
-    setSelectedOrganization(updatedOrganization);
-    setOrganizationLocked(!!updatedOrganization);
+    setSelectedOrganization(itemName);
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  const getCategoryIndex = (categoryName) => {
-    return selectedCategory === categoryName ? 1 : 0;
-  };
-
   const handleReset = () => {
-    setSelectedCategory(null);
+    setSelectedCategory([]);
     setSelectedOrganization(null);
-    setCategoryLocked(false);
-    setOrganizationLocked(false);
   };
 
   const handleSave = () => {
     if (onCategoryChange && typeof onCategoryChange === "function") {
-      onCategoryChange(selectedCategory ? [selectedCategory] : []);
+      onCategoryChange(selectedCategory);
     }
     if (onOrganizationChange && typeof onOrganizationChange === "function") {
       onOrganizationChange(selectedOrganization ? [selectedOrganization] : []);
@@ -187,7 +172,7 @@ export default function DrawerFilters({
               >
                 {categories.map((category, index) => {
                   const icon = icons[index % icons.length];
-                  const categoryIndex = getCategoryIndex(category.name);
+                  const isSelected = selectedCategory.includes(category.name);
                   return (
                     <Card
                       key={category.id}
@@ -200,7 +185,7 @@ export default function DrawerFilters({
                         "&:hover": {
                           boxShadow: "0px 0px 10px 5px #00000054",
                         },
-                        ...(selectedCategory === category.name && {
+                        ...(isSelected && {
                           border: "2px solid black",
                         }),
                         "@media (max-width: 465px)": {
@@ -226,25 +211,6 @@ export default function DrawerFilters({
                               marginBottom: 8,
                             }}
                           />
-                          {categoryIndex > 0 && (
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: 8,
-                                right: 8,
-                                backgroundColor: "black",
-                                color: "white",
-                                borderRadius: "50%",
-                                width: 24,
-                                height: 24,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              {categoryIndex}
-                            </Box>
-                          )}
                           <Typography
                             level="title-md"
                             sx={{ wordWrap: "break-word" }}
@@ -252,7 +218,7 @@ export default function DrawerFilters({
                             {category.name}
                           </Typography>
                           <Checkbox
-                            checked={selectedCategory === category.name}
+                            checked={isSelected}
                             sx={{ display: "none" }}
                           />
                         </Box>
@@ -277,6 +243,7 @@ export default function DrawerFilters({
                 }}
               >
                 {organizations.map((organization) => {
+                  const isSelected = selectedOrganization === organization.name;
                   return (
                     <Card
                       key={organization.id}
@@ -288,7 +255,7 @@ export default function DrawerFilters({
                         "&:hover": {
                           boxShadow: "0px 0px 10px 5px #00000054",
                         },
-                        ...(selectedOrganization === organization.name && {
+                        ...(isSelected && {
                           border: "2px solid black",
                         }),
                         "@media (max-width: 465px)": {
@@ -321,7 +288,7 @@ export default function DrawerFilters({
                             {organization.name}
                           </Typography>
                           <Checkbox
-                            checked={selectedOrganization === organization.name}
+                            checked={isSelected}
                             sx={{ display: "none" }}
                           />
                         </Box>
@@ -349,8 +316,12 @@ export default function DrawerFilters({
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
       >
-        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: "100%" }}>
-          Можно выбрать не более одной категории или одной организации!
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="warning"
+          sx={{ width: "100%" }}
+        >
+          Можно выбрать не более одной организации!
         </Alert>
       </Snackbar>
     </React.Fragment>
