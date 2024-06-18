@@ -76,13 +76,13 @@ export default function DrawerFilters({
   }, []);
 
   const handleCardsClick = (itemName) => {
-    const isSelected = selectedCategory.includes(itemName);
-
-    if (isSelected) {
-      setSelectedCategory(selectedCategory.filter((item) => item !== itemName));
-    } else {
-      setSelectedCategory([...selectedCategory, itemName]);
-    }
+    setSelectedCategory((prevSelectedCategory) => {
+      if (prevSelectedCategory.includes(itemName)) {
+        return prevSelectedCategory.filter((item) => item !== itemName);
+      } else {
+        return [...prevSelectedCategory, itemName];
+      }
+    });
   };
 
   const handleCardClick = (itemName) => {
@@ -174,56 +174,86 @@ export default function DrawerFilters({
                   const icon = icons[index % icons.length];
                   const isSelected = selectedCategory.includes(category.name);
                   return (
-                    <Card
-                      key={category.id}
-                      sx={{
-                        width: "calc(40% - 8px)", // Adjust the width to fit within the flex container
-                        boxShadow: "none",
-                        borderRadius: 16,
-                        cursor: "pointer", // Добавляем cursor: pointer
-                        position: "relative",
-                        "&:hover": {
-                          boxShadow: "0px 0px 10px 5px #00000054",
-                        },
-                        ...(isSelected && {
-                          border: "2px solid black",
-                        }),
-                        "@media (max-width: 465px)": {
-                          width: "300px",
-                        },
-                      }}
-                      onClick={() => handleCardsClick(category.name)}
-                    >
-                      <CardContent>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          justifyContent="center"
-                          alignItems="center"
-                          textAlign="center"
-                        >
-                          <img
-                            src={icon}
-                            alt={category.name}
-                            style={{
-                              width: 48,
-                              height: 48,
-                              marginBottom: 8,
-                            }}
-                          />
-                          <Typography
-                            level="title-md"
-                            sx={{ wordWrap: "break-word" }}
+                    <React.Fragment key={category.id}>
+                      <Card
+                        sx={{
+                          width: "calc(40% - 8px)", // Adjust the width to fit within the flex container
+                          boxShadow: "none",
+                          borderRadius: 16,
+                          cursor: "pointer",
+                          position: "relative",
+                          "&:hover": {
+                            boxShadow: "0px 0px 10px 5px #00000054",
+                          },
+                          ...(isSelected && {
+                            border: "2px solid black",
+                          }),
+                          "@media (max-width: 465px)": {
+                            width: "300px",
+                          },
+                        }}
+                        onClick={() => handleCardsClick(category.name)}
+                      >
+                        <CardContent>
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            textAlign="center"
                           >
-                            {category.name}
+                            <img
+                              src={icon}
+                              alt={category.name}
+                              style={{
+                                width: 48,
+                                height: 48,
+                                marginBottom: 8,
+                              }}
+                            />
+                            <Typography
+                              level="title-md"
+                              sx={{ wordWrap: "break-word" }}
+                            >
+                              {category.name}
+                            </Typography>
+                            <Checkbox
+                              checked={isSelected}
+                              sx={{ display: "none" }}
+                            />
+                          </Box>
+                        </CardContent>
+                      </Card>
+                      {isSelected && category.children.length > 0 && (
+                        <Box sx={{ width: "100%", paddingLeft: 2 }}>
+                          <Typography
+                            sx={{
+                              typography: "subtitle1",
+                              fontWeight: "bold",
+                              marginTop: 2,
+                              marginBottom: 1,
+                            }}
+                          >
+                            Подкатегории для {category.name}
                           </Typography>
-                          <Checkbox
-                            checked={isSelected}
-                            sx={{ display: "none" }}
-                          />
+                          {category.children.map((subcategory) => (
+                            <Box
+                              key={subcategory.id}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginBottom: 1,
+                              }}
+                            >
+                              <Checkbox />
+                              <Typography sx={{ marginLeft: 1 }}>
+                                {subcategory.name}
+                              </Typography>
+                            </Box>
+                          ))}
                         </Box>
-                      </CardContent>
-                    </Card>
+                      )}
+                    </React.Fragment>
                   );
                 })}
               </Box>
