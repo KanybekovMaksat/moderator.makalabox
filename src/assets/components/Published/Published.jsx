@@ -14,13 +14,14 @@ import Filter from "../Filter/Filter";
 import "./Published.scss";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import 'dayjs/locale/ru'
 export default function RecipeReviewCard({ searchQuery }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState({});
   const [selectedOrganizations, setSelectedOrganizations] = useState([]);
 
   const { store } = useContext(Context);
@@ -50,48 +51,70 @@ export default function RecipeReviewCard({ searchQuery }) {
   }, [store]);
 
   useEffect(() => {
-    let filtered = posts;
+    const filterPosts = () => {
+      let filtered = posts;
 
-    if (searchQuery) {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      filtered = filtered.filter((post) => {
-        const titleMatch = post.title.toLowerCase().includes(lowercasedQuery);
-        const authorMatch = post.author.fullName
-          .toLowerCase()
-          .includes(lowercasedQuery);
-        const orgMatch = post.organization.name
-          .toLowerCase()
-          .includes(lowercasedQuery);
-        const categoryMatch = post.categories.some((category) =>
-          category.toLowerCase().includes(lowercasedQuery)
+      if (searchQuery) {
+        const lowercasedQuery = searchQuery.toLowerCase();
+        filtered = filtered.filter((post) => {
+          const titleMatch = post.title.toLowerCase().includes(lowercasedQuery);
+          const authorMatch = post.author.fullName
+            .toLowerCase()
+            .includes(lowercasedQuery);
+          const orgMatch = post.organization.name
+            .toLowerCase()
+            .includes(lowercasedQuery);
+          const categoryMatch = post.categories.some((category) =>
+            category.toLowerCase().includes(lowercasedQuery)
+          );
+
+          return titleMatch || authorMatch || categoryMatch || orgMatch;
+        });
+      }
+
+      if (selectedCategories.length > 0) {
+        filtered = filtered.filter((post) =>
+          post.categories.some((category) =>
+            selectedCategories.includes(category)
+          )
         );
+      }
 
-        return titleMatch || authorMatch || categoryMatch || orgMatch;
-      });
-    }
+      if (Object.keys(selectedSubcategories).length > 0) {
+        filtered = filtered.filter((post) =>
+          post.categories.some((category) =>
+            Object.keys(selectedSubcategories).some((subcategory) =>
+              selectedSubcategories[subcategory].includes(category)
+            )
+          )
+        );
+      }
 
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter((post) =>
-        post.categories.some((category) =>
-          selectedCategories.includes(category)
-        )
-      );
-    }
+      if (selectedOrganizations.length > 0) {
+        filtered = filtered.filter((post) =>
+          selectedOrganizations.includes(post.organization.name)
+        );
+      }
 
-    // if (selectedOrganizations.length > 0) {
-    //   filtered = filtered.filter((post) =>
-    //     post.organization.some((org) =>
-    //       selectedOrganizations.includes(org)
-    //     )
-    //   );
-    // }
+      setFilteredPosts(filtered);
+    };
 
-    setFilteredPosts(filtered);
-  }, [searchQuery, posts, selectedCategories, selectedOrganizations]);
-
-  const handleFilterChange = (selectedCategories, selectedOrganizations) => {
+    filterPosts();
+  }, [
+    searchQuery,
+    posts,
+    selectedCategories,
+    selectedSubcategories,
+    selectedOrganizations,
+  ]);
+  const handleSubCategoryChange = (selectedSubcategories) => {
+    setSelectedSubcategories(selectedSubcategories || {} );
+  };
+  const handleOrganizationChange = (selectedOrganizations) => {
+    setSelectedOrganizations(selectedOrganizations || {});
+  };
+  const handleCategoryChange = (selectedCategories) => {
     setSelectedCategories(selectedCategories);
-    setSelectedOrganizations(selectedOrganizations);
   };
 
   return (
@@ -100,7 +123,11 @@ export default function RecipeReviewCard({ searchQuery }) {
         {!searchQuery && (
           <div className="Filter__content">
             <h2>Статьи для проверки</h2>
-            <Filter onCategoryChange={handleFilterChange} />
+            <Filter
+              onSubCategoryChange={handleSubCategoryChange}
+              onCategoryChange={handleCategoryChange}
+              onOrganizationChange={handleOrganizationChange}
+            />
           </div>
         )}
         <div className="flex__card">
@@ -112,14 +139,12 @@ export default function RecipeReviewCard({ searchQuery }) {
                     <Skeleton circle={true} width={54} height={54} />
                     <p className="Card__writer">
                       <img src={writer} alt="" style={{ width: "25px" }} />
-
                       <Skeleton width={100} height={20} />
                     </p>
                   </div>
                   <div className="Card__infoDate">
                     <p className="Card__date">
                       <img src={calendar} alt="" />
-
                       <Skeleton width={100} height={20} />
                     </p>
                     <p className="Card__clock">
@@ -129,7 +154,6 @@ export default function RecipeReviewCard({ searchQuery }) {
                   </div>
                 </div>
                 <h2 className="Card__title">
-                  {" "}
                   <Skeleton maxwidth={750} height={35} />
                   <Skeleton maxwidth={650} height={25} />
                   <Skeleton maxwidth={650} height={25} />
@@ -143,7 +167,6 @@ export default function RecipeReviewCard({ searchQuery }) {
                     <ul>
                       {Array.from({ length: 3 }).map((_, index) => (
                         <li key={index}>
-                          {" "}
                           <Skeleton width={90} height={20} />
                         </li>
                       ))}
@@ -155,8 +178,7 @@ export default function RecipeReviewCard({ searchQuery }) {
                   <div className="Card__org">
                     <ul>
                       <li>
-                        {" "}
-                        <Skeleton width={90} height={20} />{" "}
+                        <Skeleton width={90} height={20} />
                       </li>
                     </ul>
                   </div>
@@ -217,7 +239,7 @@ export default function RecipeReviewCard({ searchQuery }) {
                   <h4>Организация</h4>
                   <div className="Card__org">
                     <ul>
-                      <li> {post.organization.name}</li>
+                      <li>{post.organization.name}</li>
                     </ul>
                   </div>
                 </div>

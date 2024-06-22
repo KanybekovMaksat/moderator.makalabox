@@ -263,7 +263,7 @@ const PrimarySearchAppBar = observer(() => {
           </SearchResultsContainer>
         </Overlay>
       )}
-      <Filter onCategoryChange={handleCategoryChange} />
+      <Filter onCategoryChange={handleCategoryChange}  />
       {renderMobileMenu}
       {renderMenu}
     </Box>

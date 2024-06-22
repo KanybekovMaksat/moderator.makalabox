@@ -1,30 +1,37 @@
-import React from "react";
-import Box from "@mui/joy/Box";
-import Drawer from "@mui/joy/Drawer";
-import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import CardContent from "@mui/joy/CardContent";
-import DialogTitle from "@mui/joy/DialogTitle";
-import DialogContent from "@mui/joy/DialogContent";
-import ModalClose from "@mui/joy/ModalClose";
-import Divider from "@mui/joy/Divider";
-import Typography from "@mui/joy/Typography";
-import TuneIcon from "@mui/icons-material/TuneRounded";
-import Stack from "@mui/joy/Stack";
-import Checkbox from "@mui/joy/Checkbox";
-import Sheet from "@mui/joy/Sheet";
-import Snackbar from "@mui/material/Snackbar";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  DialogTitle,
+  DialogContent,
+  Divider,
+  Typography,
+  Drawer,
+  ModalClose,
+  Stack,
+  Checkbox,
+  Sheet,
+  Snackbar,
+} from "@mui/joy";
 import MuiAlert from "@mui/material/Alert";
+import TuneIcon from "@mui/icons-material/TuneRounded";
+import CheckIcon from "@mui/icons-material/CheckCircleOutlineRounded"; // Import the check icon
+import $api from "../../../http";
 import iconDesign from "../../images/web-design.png";
 import iconMarketing from "../../images/marketing.png";
 import iconLeader from "../../images/leader.png";
 import iconProgramming from "../../images/programming.png";
 import iconDevelopYourself from "../../images/developYourself.png";
 import iconSport from "../../images/sport.png";
-import $api from "../../../http";
+import iconArchitecture from "../../images/architecture.png";
+import iconHistory from "../../images/history.png";
 
 const icons = [
+  iconArchitecture,
   iconDesign,
+  iconHistory,
   iconMarketing,
   iconLeader,
   iconProgramming,
@@ -38,16 +45,18 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function DrawerFilters({
   onCategoryChange,
+  onSubCategoryChange,
   onOrganizationChange,
 }) {
-  const [open, setOpen] = React.useState(false);
-  const [selectedCategory, setSelectedCategory] = React.useState([]);
-  const [selectedOrganization, setSelectedOrganization] = React.useState(null);
-  const [categories, setCategories] = React.useState([]);
-  const [organizations, setOrganizations] = React.useState([]);
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [organizations, setOrganizations] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [selectedSubcategories, setSelectedSubcategories] = useState({});
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await $api.get("articles/categories/");
@@ -61,7 +70,7 @@ export default function DrawerFilters({
     fetchCategories();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchOrganizations = async () => {
       try {
         const response = await $api.get("articles/organizations/");
@@ -86,7 +95,32 @@ export default function DrawerFilters({
   };
 
   const handleCardClick = (itemName) => {
-    setSelectedOrganization(itemName);
+    if (selectedOrganization && selectedOrganization !== itemName) {
+      setSnackbarOpen(true);
+    } else {
+      setSelectedOrganization((prevSelectedOrganization) =>
+        prevSelectedOrganization === itemName ? null : itemName
+      );
+    }
+  };
+
+  const handleSubcategoryClick = (categoryName, subcategoryName) => {
+    setSelectedSubcategories((prev) => {
+      const categorySubcategories = prev[categoryName] || [];
+      if (categorySubcategories.includes(subcategoryName)) {
+        return {
+          ...prev,
+          [categoryName]: categorySubcategories.filter(
+            (item) => item !== subcategoryName
+          ),
+        };
+      } else {
+        return {
+          ...prev,
+          [categoryName]: [...categorySubcategories, subcategoryName],
+        };
+      }
+    });
   };
 
   const handleSnackbarClose = () => {
@@ -96,6 +130,7 @@ export default function DrawerFilters({
   const handleReset = () => {
     setSelectedCategory([]);
     setSelectedOrganization(null);
+    setSelectedSubcategories({});
   };
 
   const handleSave = () => {
@@ -104,6 +139,9 @@ export default function DrawerFilters({
     }
     if (onOrganizationChange && typeof onOrganizationChange === "function") {
       onOrganizationChange(selectedOrganization ? [selectedOrganization] : []);
+    }
+    if (onSubCategoryChange && typeof onSubCategoryChange === "function") {
+      onSubCategoryChange(selectedSubcategories);
     }
     setOpen(false);
   };
@@ -182,8 +220,10 @@ export default function DrawerFilters({
                           borderRadius: 16,
                           cursor: "pointer",
                           position: "relative",
+                          transition: "transform 0.2s, box-shadow 0.2s",
                           "&:hover": {
                             boxShadow: "0px 0px 10px 5px #00000054",
+                            transform: "scale(0.99)",
                           },
                           ...(isSelected && {
                             border: "2px solid black",
@@ -203,7 +243,7 @@ export default function DrawerFilters({
                             textAlign="center"
                           >
                             <img
-                              src={icon}
+                              src={category.photo}
                               alt={category.name}
                               style={{
                                 width: 48,
@@ -217,42 +257,73 @@ export default function DrawerFilters({
                             >
                               {category.name}
                             </Typography>
-                            <Checkbox
-                              checked={isSelected}
-                              sx={{ display: "none" }}
-                            />
+                            {isSelected && (
+                              <CheckIcon
+                                sx={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 8,
+                                  color: "green",
+                                }}
+                              />
+                            )}
                           </Box>
                         </CardContent>
                       </Card>
-                      {isSelected && category.children.length > 0 && (
-                        <Box sx={{ width: "100%", paddingLeft: 2 }}>
-                          <Typography
-                            sx={{
-                              typography: "subtitle1",
-                              fontWeight: "bold",
-                              marginTop: 2,
-                              marginBottom: 1,
-                            }}
-                          >
-                            Подкатегории для {category.name}
-                          </Typography>
-                          {category.children.map((subcategory) => (
-                            <Box
-                              key={subcategory.id}
+                      {isSelected &&
+                        category.children &&
+                        category.children.length > 0 && (
+                          <Box sx={{ width: "100%", paddingLeft: 2 }}>
+                            <Typography
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
+                                typography: "subtitle1",
+                                fontWeight: "bold",
+                                marginTop: 2,
                                 marginBottom: 1,
                               }}
                             >
-                              <Checkbox />
-                              <Typography sx={{ marginLeft: 1 }}>
-                                {subcategory.name}
-                              </Typography>
-                            </Box>
-                          ))}
-                        </Box>
-                      )}
+                              Подкатегории для {category.name}
+                            </Typography>
+                            {category.children.map((subcategory) => {
+                              const isSubcategorySelected = (
+                                selectedSubcategories[category.name] || []
+                              ).includes(subcategory.name);
+                              return (
+                                <Box
+                                  key={subcategory.id}
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    marginBottom: 1,
+                                    cursor: "pointer",
+                                    padding: 1,
+                                    borderRadius: 8,
+                                    transition:
+                                      "background-color 0.2s, transform 0.2s",
+                                    background: isSubcategorySelected
+                                      ? "#f0f0f0"
+                                      : "transparent",
+                                    "&:hover": {
+                                      background: "#e0e0e0",
+                                      transform: "scale(0.99)",
+                                    },
+                                  }}
+                                  onClick={() =>
+                                    handleSubcategoryClick(
+                                      category.name,
+                                      subcategory.name
+                                    )
+                                  }
+                                >
+                                  <Checkbox checked={isSubcategorySelected} />
+                                  <Typography sx={{ marginLeft: 1 }}>
+                                    {subcategory.name}
+                                  </Typography>
+                                </Box>
+                              );
+                            })}
+                          </Box>
+                        )}
                     </React.Fragment>
                   );
                 })}
@@ -282,8 +353,10 @@ export default function DrawerFilters({
                         boxShadow: "none",
                         borderRadius: 16,
                         cursor: "pointer",
+                        transition: "transform 0.2s, box-shadow 0.2s",
                         "&:hover": {
                           boxShadow: "0px 0px 10px 5px #00000054",
+                          transform: "scale(1.05)",
                         },
                         ...(isSelected && {
                           border: "2px solid black",
@@ -317,10 +390,16 @@ export default function DrawerFilters({
                           >
                             {organization.name}
                           </Typography>
-                          <Checkbox
-                            checked={isSelected}
-                            sx={{ display: "none" }}
-                          />
+                          {isSelected && (
+                            <CheckIcon
+                              sx={{
+                                position: "absolute",
+                                top: 8,
+                                right: 8,
+                                color: "green",
+                              }}
+                            />
+                          )}
                         </Box>
                       </CardContent>
                     </Card>
