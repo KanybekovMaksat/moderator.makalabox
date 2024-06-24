@@ -47,6 +47,7 @@ export default function DrawerFilters({
   onCategoryChange,
   onSubCategoryChange,
   onOrganizationChange,
+  onSubOrganizationChange,
 }) {
   const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState([]);
@@ -55,6 +56,7 @@ export default function DrawerFilters({
   const [organizations, setOrganizations] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [selectedSubcategories, setSelectedSubcategories] = useState({});
+  const [selectedOrganizationSubcategories,setSelectedOrganizationSubcategories] = useState({});
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -123,6 +125,25 @@ export default function DrawerFilters({
     });
   };
 
+  const handleOrganizationSubcategoryClick = (organizationName, subcategoryName ) => {
+    setSelectedOrganizationSubcategories((prev) => {
+      const organizationSubcategories = prev[organizationName] || [];
+      if (organizationSubcategories.includes(subcategoryName)) {
+        return {
+          ...prev,
+          [organizationName]: organizationSubcategories.filter(
+            (item) => item !== subcategoryName
+          ),
+        };
+      } else {
+        return {
+          ...prev,
+          [organizationName]: [...organizationSubcategories, subcategoryName],
+        };
+      }
+    });
+  };
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -131,6 +152,7 @@ export default function DrawerFilters({
     setSelectedCategory([]);
     setSelectedOrganization(null);
     setSelectedSubcategories({});
+    setSelectedOrganizationSubcategories({});
   };
 
   const handleSave = () => {
@@ -142,6 +164,12 @@ export default function DrawerFilters({
     }
     if (onSubCategoryChange && typeof onSubCategoryChange === "function") {
       onSubCategoryChange(selectedSubcategories);
+    }
+    if (
+      onSubOrganizationChange &&
+      typeof onSubOrganizationChange === "function"
+    ) {
+      onSubOrganizationChange(selectedOrganizationSubcategories);
     }
     setOpen(false);
   };
@@ -346,63 +374,121 @@ export default function DrawerFilters({
                 {organizations.map((organization) => {
                   const isSelected = selectedOrganization === organization.name;
                   return (
-                    <Card
-                      key={organization.id}
-                      sx={{
-                        width: "calc(40% - 8px)", // Adjust the width to fit within the flex container
-                        boxShadow: "none",
-                        borderRadius: 16,
-                        cursor: "pointer",
-                        transition: "transform 0.2s, box-shadow 0.2s",
-                        "&:hover": {
-                          boxShadow: "0px 0px 10px 5px #00000054",
-                          transform: "scale(1.05)",
-                        },
-                        ...(isSelected && {
-                          border: "2px solid black",
-                        }),
-                        "@media (max-width: 465px)": {
-                          width: "300px",
-                        },
-                      }}
-                      onClick={() => handleCardClick(organization.name)}
-                    >
-                      <CardContent>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="center"
-                          justifyContent="center"
-                          textAlign="center"
-                        >
-                          <img
-                            src={organization.photo}
-                            alt={organization.name}
-                            style={{
-                              width: 48,
-                              height: 48,
-                              marginBottom: 8,
-                            }}
-                          />
-                          <Typography
-                            level="title-md"
-                            sx={{ wordWrap: "break-word" }}
+                    <React.Fragment key={organization.id}>
+                      <Card
+                        sx={{
+                          width: "calc(40% - 8px)", // Adjust the width to fit within the flex container
+                          boxShadow: "none",
+                          borderRadius: 16,
+                          cursor: "pointer",
+                          transition: "transform 0.2s, box-shadow 0.2s",
+                          "&:hover": {
+                            boxShadow: "0px 0px 10px 5px #00000054",
+                            transform: "scale(1.05)",
+                          },
+                          ...(isSelected && {
+                            border: "2px solid black",
+                          }),
+                          "@media (max-width: 465px)": {
+                            width: "300px",
+                          },
+                        }}
+                        onClick={() => handleCardClick(organization.name)}
+                      >
+                        <CardContent>
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="center"
+                            justifyContent="center"
+                            textAlign="center"
                           >
-                            {organization.name}
-                          </Typography>
-                          {isSelected && (
-                            <CheckIcon
-                              sx={{
-                                position: "absolute",
-                                top: 8,
-                                right: 8,
-                                color: "green",
+                            <img
+                              src={organization.photo}
+                              alt={organization.name}
+                              style={{
+                                width: 48,
+                                height: 48,
+                                marginBottom: 8,
                               }}
                             />
-                          )}
-                        </Box>
-                      </CardContent>
-                    </Card>
+                            <Typography
+                              level="title-md"
+                              sx={{ wordWrap: "break-word" }}
+                            >
+                              {organization.name}
+                            </Typography>
+                            {isSelected && (
+                              <CheckIcon
+                                sx={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 8,
+                                  color: "green",
+                                }}
+                              />
+                            )}
+                          </Box>
+                        </CardContent>
+                      </Card>
+                      
+                      {isSelected &&
+                        organization.children &&
+                        organization.children.length > 0 && (
+                          <Box sx={{ width: "100%", paddingLeft: 2 }}>
+                            <Typography
+                              sx={{
+                                typography: "subtitle1",
+                                fontWeight: "bold",
+                                marginTop: 2,
+                                marginBottom: 1,
+                              }}
+                            >
+                              Подкатегории для {organization.name}
+                            </Typography>
+                            {organization.children.map((subcategory) => {
+                              const isSubcategorySelected = (
+                                selectedOrganizationSubcategories[
+                                  organization.name
+                                ] || []
+                              ).includes(subcategory.name);
+                              return (
+                                <Box
+                                  key={subcategory.id}
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    marginBottom: 1,
+                                    cursor: "pointer",
+                                    padding: 1,
+                                    borderRadius: 8,
+                                    transition:
+                                      "background-color 0.2s, transform 0.2s",
+                                    background: isSubcategorySelected
+                                      ? "#f0f0f0"
+                                      : "transparent",
+                                    "&:hover": {
+                                      background: "#e0e0e0",
+                                      transform: "scale(0.99)",
+                                    },
+                                  }}
+                                  onClick={() =>
+                                    handleOrganizationSubcategoryClick(
+                                      organization.name,
+                                      subcategory.name
+                                    )
+                                  }
+                                >
+                                  <Checkbox checked={isSubcategorySelected} />
+                                  <Typography sx={{ marginLeft: 1 }}>
+                                    {subcategory.name}
+                                  </Typography>
+                                </Box>
+                              );
+                            })}
+                          </Box>
+                        )}
+                    </React.Fragment>
                   );
                 })}
               </Box>

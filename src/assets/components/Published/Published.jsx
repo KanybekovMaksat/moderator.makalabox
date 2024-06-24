@@ -14,7 +14,7 @@ import Filter from "../Filter/Filter";
 import "./Published.scss";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import 'dayjs/locale/ru'
+import "dayjs/locale/ru";
 export default function RecipeReviewCard({ searchQuery }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,6 +22,7 @@ export default function RecipeReviewCard({ searchQuery }) {
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState({});
+  const [selectedSubOrganization, setSelectedSubOrganization] = useState({});
   const [selectedOrganizations, setSelectedOrganizations] = useState([]);
 
   const { store } = useContext(Context);
@@ -96,6 +97,15 @@ export default function RecipeReviewCard({ searchQuery }) {
         );
       }
 
+      if (Object.keys(selectedSubOrganization).length > 0) {
+        filtered = filtered.filter((post) =>
+          post.organizationы.some((org) =>
+            Object.keys(selectedSubOrganization).some((subcategory) =>
+              selectedSubOrganization[subcategory].includes(org)
+            )
+          )
+        );
+      }
       setFilteredPosts(filtered);
     };
 
@@ -106,15 +116,19 @@ export default function RecipeReviewCard({ searchQuery }) {
     selectedCategories,
     selectedSubcategories,
     selectedOrganizations,
+    selectedSubOrganization,
   ]);
   const handleSubCategoryChange = (selectedSubcategories) => {
-    setSelectedSubcategories(selectedSubcategories || {} );
+    setSelectedSubcategories(selectedSubcategories || {});
   };
   const handleOrganizationChange = (selectedOrganizations) => {
     setSelectedOrganizations(selectedOrganizations || {});
   };
   const handleCategoryChange = (selectedCategories) => {
     setSelectedCategories(selectedCategories);
+  };
+  const handleSubOrganizationChange = (selectedSubOrganizations) => {
+    setSelectedSubOrganization(selectedSubOrganizations);
   };
 
   return (
@@ -124,9 +138,9 @@ export default function RecipeReviewCard({ searchQuery }) {
           <div className="Filter__content">
             <h2>Статьи для проверки</h2>
             <Filter
+              onSubOrganizationChange={handleSubOrganizationChange}
               onSubCategoryChange={handleSubCategoryChange}
               onCategoryChange={handleCategoryChange}
-              onOrganizationChange={handleOrganizationChange}
             />
           </div>
         )}
