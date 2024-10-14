@@ -94,6 +94,7 @@ const ExaminationArticle = () => {
     setOpenSnackbar(true);
   };
 
+
   const navigateAfterDelay = (path, delay) => {
     setTimeout(() => {
       navigate(path);

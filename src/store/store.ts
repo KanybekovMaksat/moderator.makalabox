@@ -13,12 +13,12 @@ export default class Store {
     makeAutoObservable(this);
   }
 
-  setAuth(boll: boolean) {
-    this.isAuth = boll;
+  setAuth(isAuth: boolean) {
+    this.isAuth = isAuth;
   }
 
   setUser(user: IUser) {
-    this.user;
+    this.user = user;
   }
 
   async login(username: string, password: string) {
@@ -55,10 +55,8 @@ export default class Store {
 
       const response = await axios.post<AuthResponse>(
         `${API_URL}jwt/refresh/`,
-        {
-          refresh: refresh,
-          withCredentials: true,
-        }
+        { refresh },
+        { withCredentials: true }
       );
 
       localStorage.setItem("token", response.data.access);
