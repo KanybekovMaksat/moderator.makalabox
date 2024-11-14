@@ -19,7 +19,7 @@ const ExaminationArticle = () => {
   const [messageColor, setMessageColor] = useState("");
   const [confirmAction, setConfirmAction] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [moderatorComment, setModeratorComment] = useState(""); // Новое состояние
+  const [moderatorComment, setModeratorComment] = useState(""); 
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -195,8 +195,8 @@ const ExaminationArticle = () => {
                 setConfirmAction={setConfirmAction}
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
-                moderatorComment={moderatorComment} // Передаем `moderatorComment`
-                setModeratorComment={setModeratorComment} // Передаем `setModeratorComment`
+                moderatorComment={moderatorComment}
+                setModeratorComment={setModeratorComment} 
                 handleDialogClose={handleDialogClose}
                 openSnackbar={openSnackbar}
                 handleCloseSnackbar={handleCloseSnackbar}

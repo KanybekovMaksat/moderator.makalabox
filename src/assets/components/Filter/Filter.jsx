@@ -56,7 +56,10 @@ export default function DrawerFilters({
   const [organizations, setOrganizations] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [selectedSubcategories, setSelectedSubcategories] = useState({});
-  const [selectedOrganizationSubcategories,setSelectedOrganizationSubcategories] = useState({});
+  const [
+    selectedOrganizationSubcategories,
+    setSelectedOrganizationSubcategories,
+  ] = useState({});
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -125,7 +128,10 @@ export default function DrawerFilters({
     });
   };
 
-  const handleOrganizationSubcategoryClick = (organizationName, subcategoryName ) => {
+  const handleOrganizationSubcategoryClick = (
+    organizationName,
+    subcategoryName
+  ) => {
     setSelectedOrganizationSubcategories((prev) => {
       const organizationSubcategories = prev[organizationName] || [];
       if (organizationSubcategories.includes(subcategoryName)) {
@@ -431,7 +437,7 @@ export default function DrawerFilters({
                           </Box>
                         </CardContent>
                       </Card>
-                      
+
                       {isSelected &&
                         organization.children &&
                         organization.children.length > 0 && (

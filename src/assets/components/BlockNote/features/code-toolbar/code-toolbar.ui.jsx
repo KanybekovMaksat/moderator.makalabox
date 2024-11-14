@@ -9,7 +9,7 @@ export function CodeButton() {
   useEffect(() => {
     if (editor) {
       setIsSelected(editor.getActiveStyles().code === 'rgba(135,131,120,.15)');
-    }
+    } 
   }, [editor]);
 
   useEditorContentOrSelectionChange(() => {

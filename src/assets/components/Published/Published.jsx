@@ -29,26 +29,33 @@ export default function RecipeReviewCard({ searchQuery }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isMounted = true;
     const fetchPosts = async () => {
       try {
         const response = await $api.get(`articles/moderation/`);
-        const fetchedPosts = response.data.results;
-        setPosts(fetchedPosts);
-        localStorage.setItem("cachedPosts", JSON.stringify(fetchedPosts));
-        setIsLoading(false);
+        if (isMounted) {
+          setPosts(response.data.results);
+          localStorage.setItem(
+            "cachedPosts",
+            JSON.stringify(response.data.results)
+          );
+          setIsLoading(false);
+        }
       } catch (e) {
         if (e.response?.status === 401) {
           await store.checkAuth();
         } else {
-          console.log(e);
-          setError("Ошибка загрузки данных");
-          setIsLoading(false);
+          if (isMounted) {
+            setError("Ошибка загрузки данных");
+            setIsLoading(false);
+          }
         }
       }
     };
-
-    setIsLoading(true);
     fetchPosts();
+    return () => {
+      isMounted = false;
+    };
   }, [store]);
 
   useEffect(() => {
@@ -99,7 +106,7 @@ export default function RecipeReviewCard({ searchQuery }) {
 
       if (Object.keys(selectedSubOrganization).length > 0) {
         filtered = filtered.filter((post) =>
-          post.organizationы.some((org) =>
+          post.organization.some((org) =>
             Object.keys(selectedSubOrganization).some((subcategory) =>
               selectedSubOrganization[subcategory].includes(org)
             )
