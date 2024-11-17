@@ -64,7 +64,7 @@ const PrimarySearchAppBar = observer(() => {
     >
       <Link to={"/moderator-page"}>
         <MenuItem style={{ color: "black" }} onClick={handleMenuClose}>
-          Profile
+          Профиль
         </MenuItem>
       </Link>
     </Menu>

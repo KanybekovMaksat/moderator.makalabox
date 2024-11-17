@@ -2,7 +2,6 @@ import { Route, Routes } from 'react-router-dom'
 import  Profile  from './ModeratorPage'
 import Login from './Login'
 import Examinations from './Examinations'
-import LoadingAnimation from '../assets/components/Loading/Loading'
 import Basket from "./BasketPage"
 import Serach from "./SearchPage"
 

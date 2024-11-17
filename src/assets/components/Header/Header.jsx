@@ -14,9 +14,8 @@ import { Context } from "../../../main";
 import { observer } from "mobx-react-lite";
 import boxImage from "../../images/box.png";
 import Published from "../Published/Published";
-import Filter from "../Filter/Filter"; // Подставьте свой путь до компонента Filter
+import Filter from "../Filter/Filter"; 
 
-// Custom styled components
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -92,7 +91,6 @@ const SearchResultsContainer = styled("div")(({ theme }) => ({
   overflowY: "auto"
 }));
 
-// PrimarySearchAppBar component
 const PrimarySearchAppBar = observer(() => {
   const { store } = useContext(Context);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -154,7 +152,7 @@ const PrimarySearchAppBar = observer(() => {
           Профиль
         </MenuItem>
       </Link>
-      <Link to="/login">
+      <Link to="/">
         <MenuItem style={{ color: "black" }} onClick={() => store.logout()}>
           Выйти
         </MenuItem>

@@ -2,7 +2,7 @@ import $api, { API_URL } from "../http";
 import { AxiosResponse } from "axios";
 import { AuthResponse } from "../models/response/AuthResponce";
 
-export default class AuthService {
+export default class  AuthService {
   static async login(
     email: string,
     password: string

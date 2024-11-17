@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@blocknote/core": "^0.12.4",
-    "@blocknote/mantine": "^0.13.2",
-    "@blocknote/react": "^0.13.2",
+    "@blocknote/core": "^0.19.1",
+    "@blocknote/mantine": "^0.19.1",
+    "@blocknote/react": "^0.19.1",
     "@defensestation/blocknote-code": "^1.0.4",
     "@defensestation/blocknote-comments": "^1.0.2",
     "@emotion/react": "^11.11.4",
